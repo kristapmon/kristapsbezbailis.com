@@ -41,6 +41,15 @@
 	  }
 	}
 	</script>
+
+<!-- DataFast.io Tracking Code -->
+<script
+  defer
+  data-website-id="68d541b0d91758792dab699c"
+  data-domain="kristapsbezbailis.com"
+  src="https://datafa.st/js/script.js">
+</script>
+<!-- End DataFast.io Tracking Code -->
   
   </head>
 
