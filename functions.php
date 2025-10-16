@@ -2,9 +2,9 @@
 
 // Add scripts and stylesheets
 function startwordpress_scripts() {
-  wp_enqueue_style( 'skeleton', get_template_directory_uri() . '/css/skeleton.css' );
+  wp_enqueue_style( 'skeleton', get_template_directory_uri() . '/assets/css/skeleton.css' );
   wp_enqueue_style( 'style', get_template_directory_uri() . '/style.css' );
-	wp_enqueue_script( 'js', get_template_directory_uri() . '/js/jQuery.js', array( 'jquery' ), true );
+	wp_enqueue_script( 'js', get_template_directory_uri() . '/assets/js/jQuery.js', array( 'jquery' ), true );
 }
 
 add_action( 'wp_enqueue_scripts', 'startwordpress_scripts' );
