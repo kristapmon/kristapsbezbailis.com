@@ -1,6 +1,26 @@
-#[Unreleased]
+# Changelog
 
-## [2026-02-13] — Switched body font to Plus Jakarta Sans
+All notable changes to this project are documented here.
+Versioning follows [Semantic Versioning](https://semver.org/) (MAJOR.MINOR.PATCH).
+
+---
+
+## [2.1.0] — 2026-02-13 — Added Projects custom post type with card grid layout
+
+**Type:** 🆕 New
+
+**What changed:**
+- Added "Projects" custom post type with card grid (3-column responsive), external URL field, and admin controls to show/hide featured image and excerpt on detail pages
+- Created `template-projects.php` (archive) and `single-projects.php` (detail) with modern styling and hover effects
+- Switched site font to Lora serif and adjusted line-height to 1.625 for better readability
+
+**Why it matters:** You can now showcase projects in a clean, visual portfolio grid with flexible display options per project.
+
+**Files touched:** `functions.php`, `template-projects.php`, `single-projects.php`, `style.css`, `header.php`
+
+---
+
+## [2.0.1] — 2026-02-13 — Switched body font to Plus Jakarta Sans
 
 **Type:** 🔧 Refactor
 
@@ -15,57 +35,85 @@
 
 ---
 
-## Added
-- Homepage hero section with featured image and content display
-  - Created front-page.php template for homepage-specific layout
-  - Added 60/40 split layout (content left, featured image right) on desktop
-  - Implemented mobile-first responsive design with image-first stacking
-  - Added fallback to full-width content when no featured image is present
-- Enhanced responsive container system with improved spacing
-  - Updated container widths (85% desktop, 90% mobile) for better content flow
-  - Added proper horizontal centering and consistent side spacing
-  - Implemented flexbox-based mobile reordering for optimal UX
+## [2.0.0] — 2025-10-16 — Major theme refactor with homepage hero and CSS variables
 
-## Changed
-- Updated theme color palette with CSS custom properties for better maintainability
-  - Added `--bg: #ffffff` (background), `--text: #111111` (text), `--muted: #6c757d` (muted elements), `--accent: #007acc` (accent color)
-  - Replaced all hardcoded color values throughout style.css with CSS variables
-  - Improved color consistency and ease of future theme updates
-- Updated typography to use EB Garamond and Inter fonts
-  - Changed headings (h1-h6) to use EB Garamond serif font
-  - Changed body text and form elements to use Inter sans-serif font
-  - Updated Google Fonts import URL to load the new font families
-- Improved homepage vertical spacing and alignment
-  - Adjusted section margins to match navigation spacing (1rem top margins)
-  - Aligned hero section positioning with header border styling
-  - Enhanced mobile image centering with proper block-level positioning
-- Reorganized asset structure by moving CSS and JS folders under assets/
-  - Created assets/ directory to house static resources
-  - Moved css/ and js/ folders into assets/
-  - Updated all WordPress enqueue paths in functions.php to reflect new structure
+**Type:** 🆕 New
 
-#[RELEASED]
+**What changed:**
+- Added homepage hero section with featured image (60/40 split, mobile-first responsive)
+- Introduced CSS custom properties for colors (`--bg`, `--text`, `--muted`, `--accent`)
+- Switched typography to EB Garamond (headings) + Inter (body), reorganized assets folder
 
-22 May 2021:
-- Changed the default font-family on the theme to Roboto.
-- Removed the comments section from blog posts.
+**Why it matters:** The theme now has a proper homepage layout, consistent color theming, and a cleaner codebase structure.
 
-5 Dec 2020:
-- Hardcoded the KB fav icon links into the header.php file
+**Files touched:** `front-page.php`, `style.css`, `functions.php`, `header.php`
 
-19 Nov 2018:
-- Cleaned up the newsletter subscription box CSS and made it pretty
-- Fixed the navigation moving element when hovering over it
-- Added PHO code to display the Copyright year automatically
-- Added 'Mailing list' link on the left side of the navigation bar
-- Made styling changes in the Blog area
+---
 
-5 Nov 2017:
- - added Lines 133-136 in style.css to move unordered list to the right by 3rems
- - changed Line 135 (margin-bottom for h3 tag) in skeleton.css from 2.0rem to 1.0rem
- - swapped around skeleton.css (to Line 5) and style.css (to Line 6) functions so that style.css can override skeleton.css values
- - added Lines 133-135 setting h1 tag font-size to 4.0rem (to override skeleton.css value of 5.0rem)
- - added <?php comments_template(); ?> on Line 15 in single-blog.php to enable comments for the blog posts
- - created comments.php file
-4 Nov 2017:
- - commented out Line 127 in css/skeleton.css to allow font-family setting to be taken from style.css body attribute
+## [1.2.0] — 2021-05-22 — Roboto font and removed comments
+
+**Type:** 🔧 Refactor
+
+**What changed:**
+- Changed default font-family to Roboto
+- Removed comments section from blog posts
+
+**Why it matters:** Cleaner reading experience without comment clutter.
+
+---
+
+## [1.1.0] — 2020-12-05 — Added favicon links
+
+**Type:** 🆕 New
+
+**What changed:**
+- Hardcoded favicon links into header.php for Apple touch icons and favicons
+
+**Why it matters:** Site now has proper icons across all devices and browsers.
+
+**Files touched:** `header.php`
+
+---
+
+## [1.0.0] — 2018-11-19 — Newsletter polish and navigation fixes
+
+**Type:** 🐛 Fix
+
+**What changed:**
+- Cleaned up newsletter subscription box CSS styling
+- Fixed navigation element jumping on hover
+- Added dynamic copyright year and "Mailing list" nav link
+
+**Why it matters:** First polished, stable release with professional newsletter signup and smooth navigation.
+
+**Files touched:** `style.css`, `footer.php`
+
+---
+
+## [0.2.0] — 2017-11-05 — CSS structure and comments system
+
+**Type:** 🆕 New
+
+**What changed:**
+- Fixed CSS load order so style.css can override skeleton.css
+- Adjusted heading sizes and list margins for better typography
+- Added comments template to enable blog post comments
+
+**Why it matters:** Theme now has proper CSS cascading and a working comments system.
+
+**Files touched:** `style.css`, `skeleton.css`, `functions.php`, `single-blog.php`, `comments.php`
+
+---
+
+## [0.1.0] — 2017-11-04 — Initial theme setup
+
+**Type:** 🧹 Chore
+
+**What changed:**
+- Fixed font-family inheritance by adjusting skeleton.css
+
+**Why it matters:** Foundation for consistent typography across the theme.
+
+**Files touched:** `skeleton.css`
+
+---
