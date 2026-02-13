@@ -5,6 +5,36 @@ Versioning follows [Semantic Versioning](https://semver.org/) (MAJOR.MINOR.PATCH
 
 ---
 
+## [2.3.0] — 2026-02-13 — Page icon picker with emoji + 3 icon libraries
+
+**Type:** 🆕 New
+
+**What changed:**
+- Added Page Icon meta box with visual grids: Emojis (categorized), Font Awesome (150+), Phosphor (100+), and Remix (100+) icons
+- Icons appear in navigation menu via custom nav walker, with option to show/hide in page headlines
+- Updated Notes template to match Projects structure; both pages now have consistent header styling
+
+**Why it matters:** You can now pick icons visually from the admin panel instead of copy-pasting emojis, and they sync between the menu and page title.
+
+**Files touched:** `functions.php`, `header.php`, `template-notes.php`, `page-single.php`, `index.php`, `style.css`
+
+---
+
+## [2.2.0] — 2026-02-13 — Header styling overhaul with modern menu effects
+
+**Type:** 🆕 New
+
+**What changed:**
+- Site title now has black background, white text, and slight rotation (-2deg) for visual flair
+- Menu items: inactive = gray/faded, active = black/bold, hover = smooth opacity transition (no underline)
+- Header separator line fades out at edges using gradient; added custom navigation menu support
+
+**Why it matters:** Header feels more polished and modern — active page is obvious, hover is subtle, and the tilted logo adds personality.
+
+**Files touched:** `style.css`, `functions.php`, `header.php`
+
+---
+
 ## [2.1.0] — 2026-02-13 — Added Projects custom post type with card grid layout
 
 **Type:** 🆕 New

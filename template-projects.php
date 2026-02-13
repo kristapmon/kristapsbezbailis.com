@@ -10,7 +10,7 @@ get_header(); ?>
 	<div class="container">
 		
 		<div class="projects-header">
-			<h1><?php the_title(); ?></h1>
+			<h1><?php the_page_title_with_icon(); ?></h1>
 			<?php if (have_posts()) : while (have_posts()) : the_post(); ?>
 				<?php if (get_the_content()) : ?>
 					<div class="projects-intro">

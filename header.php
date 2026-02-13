@@ -77,11 +77,18 @@
         <div class="navigation">
 		<div class="topnav" id="myTopnav">
           <?php 
-
-			wp_list_pages( '&title_li=' ); // Gets the list of Pages and displays in the navigation
-
+            if ( has_nav_menu( 'header-menu' ) ) {
+                wp_nav_menu( array(
+                    'theme_location' => 'header-menu',
+                    'container'      => false,
+                    'items_wrap'     => '%3$s',
+                    'walker'         => new Icon_Nav_Walker(),
+                    'fallback_cb'    => false
+                ) );
+            } else {
+                wp_list_pages( '&title_li=' );
+            }
           ?>
-			
 		</div>
         </div>
 

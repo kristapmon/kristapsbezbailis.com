@@ -159,9 +159,11 @@ img.aligncenter { display: block; margin-left: auto; margin-right: auto; width: 
 /* ------------------------------------------------------------ */
 
 .navigation-cover {
-  border-bottom: 1px solid var(--muted);
   padding: 1rem 0;
-  margin-bottom: 1rem;}
+  margin-bottom: 1rem;
+  border-bottom: 1px solid;
+  border-image: linear-gradient(to right, transparent, rgba(108, 117, 125, 0.35) 15%, rgba(108, 117, 125, 0.35) 85%, transparent) 1;
+}
 
 .navigation {
   position:relative;
@@ -179,29 +181,43 @@ img.aligncenter { display: block; margin-left: auto; margin-right: auto; width: 
 
 .navigation li a {
     display: block;
-    color: var(--text);
+    color: var(--muted);
     text-align: center;
     font-size: 18px;
     font-weight: 500;
     padding: 14px 16px;
     text-decoration: none;
-    border-bottom: 1px solid transparent;
+    opacity: 0.7;
+    transition: opacity 0.2s ease, color 0.2s ease;
 }
 
 .navigation li a:hover {
-  border-bottom: 1px solid var(--text);
+    opacity: 1;
+    color: var(--text);
+}
+
+.navigation li.current_page_item a {
+    color: var(--text);
+    opacity: 1;
+    font-weight: 600;
+}
+
+.navigation li a i,
+.navigation li a .menu-emoji {
+    margin-right: 0.3em;
 }
 
 .site-title a {
-  display: block;
-  color: var(--text);
+  display: inline-block;
+  color: #ffffff;
+  background-color: var(--text);
   text-align: left;
   font-size: 22px;
-  font-weight: 500;
-  padding: 14px 16px;
-  text-decoration: none;
   font-weight: bold;
+  padding: 14px 20px;
+  text-decoration: none;
   text-transform: uppercase;
+  transform: rotate(-2deg);
 }
 
 .site-additional-link a {
@@ -353,6 +369,30 @@ img.aligncenter { display: block; margin-left: auto; margin-right: auto; width: 
 /* ------------------------------------------------------------ */
 /*                     Notes styling                            */
 /* ------------------------------------------------------------ */
+
+.notes-section {
+  padding: 2rem 0 4rem;
+}
+
+.notes-header {
+  margin-bottom: 3rem;
+}
+
+.notes-header h1 {
+  text-align: center;
+  margin-bottom: 6rem;
+}
+
+.notes-intro {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto 7rem;
+  color: var(--muted);
+}
+
+.notes-intro p {
+  margin-bottom: 0;
+}
 
 img.book-cover  {
 	height: 230px;
@@ -883,6 +923,17 @@ div.mce-success-response {
   }
   
   .single-project-header {
+    margin-bottom: 2rem;
+  }
+}
+
+/* Notes Responsive - Mobile */
+@media (max-width: 600px) {
+  .notes-section {
+    padding: 1rem 0 3rem;
+  }
+  
+  .notes-header {
     margin-bottom: 2rem;
   }
 }

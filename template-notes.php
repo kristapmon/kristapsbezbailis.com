@@ -2,16 +2,30 @@
 /*Template Name: Notes*/
 
 get_header();
+?>
 
-the_content();
+<section class="notes-section">
+	<div class="container">
+		
+		<div class="notes-header">
+			<h1><?php the_page_title_with_icon(); ?></h1>
+			<?php if (have_posts()) : while (have_posts()) : the_post(); ?>
+				<?php if (get_the_content()) : ?>
+					<div class="notes-intro">
+						<?php the_content(); ?>
+					</div>
+				<?php endif; ?>
+			<?php endwhile; endif; ?>
+		</div>
 
+<?php
+// Reset and query notes
+wp_reset_query();
 query_posts(array(
    'post_type' => 'notes'
 ));
 
-
-	if ( have_posts() ) : while ( have_posts() ) : the_post();
-
+if ( have_posts() ) : while ( have_posts() ) : the_post();
 ?>
 
 
@@ -76,7 +90,13 @@ query_posts(array(
 <?php
 
 	endwhile; endif;
+	
+	wp_reset_query();
+?>
 
+	</div>
+</section>
+
+<?php
 	get_footer(); // Gets footer.php file
-
 ?>
