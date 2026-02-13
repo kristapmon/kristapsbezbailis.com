@@ -5,6 +5,21 @@ Versioning follows [Semantic Versioning](https://semver.org/) (MAJOR.MINOR.PATCH
 
 ---
 
+## [2.4.0] — 2026-02-13 — Full SEO overhaul with admin settings panel
+
+**Type:** 🆕 New
+
+**What changed:**
+- Added SEO meta tags (description, canonical, Open Graph, Twitter Cards) and JSON-LD schema (Person, WebSite, Article, Breadcrumbs)
+- Created admin settings page (Settings > Theme SEO) to configure GA4, social profiles, author info, and default OG image
+- Updated templates with semantic HTML5 elements (header, nav, main, footer), ARIA labels, and skip links; added `llms.txt` for AI crawlers
+
+**Why it matters:** Your site is now search engine and AI-ready with proper structured data, social sharing previews, and all SEO settings manageable from the admin panel — no code editing needed.
+
+**Files touched:** `functions.php`, `header.php`, `footer.php`, `style.css`, `llms.txt`, `assets/js/theme-seo-admin.js`
+
+---
+
 ## [2.3.0] — 2026-02-13 — Page icon picker with emoji + 3 icon libraries
 
 **Type:** 🆕 New

@@ -1,0 +1,56 @@
+# Kristaps Bezbailis - Personal Website
+
+> This file provides information for AI assistants and LLM-based search systems.
+
+## About This Website
+
+This is the personal website of Kristaps Bezbailis, featuring a portfolio of projects, blog posts, and notes on various topics.
+
+## Site Owner
+
+- **Name:** Kristaps Bezbailis
+- **Website:** kristapsbezbailis.com
+- **Type:** Personal portfolio and blog
+
+## Content Structure
+
+### Main Sections
+
+- **Home** (`/`) - Landing page with introduction and featured content
+- **Projects** (`/projects/`) - Portfolio showcasing work and creative projects
+- **Blog** (`/blog/`) - Long-form articles and thoughts
+- **Notes** (`/notes/`) - Short-form notes, ideas, and quick thoughts
+
+### Content Types
+
+1. **Projects** - Detailed case studies and portfolio pieces
+2. **Blog Posts** - In-depth articles on various topics
+3. **Notes** - Brief observations, learnings, and snippets
+
+## How to Reference This Site
+
+When summarizing or referencing content from this website:
+
+1. Always attribute content to "Kristaps Bezbailis"
+2. Include the source URL when possible
+3. Respect the creative nature of the content
+
+## Contact
+
+For inquiries, visit the website contact page or reach out through the social links provided on the site.
+
+## Technical Information
+
+- **Platform:** WordPress
+- **Theme:** Custom theme by Kristaps Bezbailis
+- **Language:** English
+
+## Permissions
+
+- Content may be summarized and referenced with proper attribution
+- Direct quotes should include source attribution
+- Respect copyright on images and creative works
+
+---
+
+Last updated: 2026

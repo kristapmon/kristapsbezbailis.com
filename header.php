@@ -1,6 +1,8 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
   <head>
+    <meta charset="UTF-8">
 
     <?php
 
@@ -55,26 +57,29 @@
   </head>
 
   <body>
+
+<!-- Skip link for accessibility -->
+<a href="#main-content" class="skip-link screen-reader-text">Skip to main content</a>
   
 <div class="container">
 
-   <div class="row navigation-cover">
+   <header class="row navigation-cover" role="banner">
 
 	<div class="five columns site-title">
-        <a href="<?php echo get_bloginfo( 'wpurl' );?>"><?php echo get_bloginfo( 'name' ); ?></a>			
+        <a href="<?php echo get_bloginfo( 'wpurl' );?>" rel="home"><?php echo get_bloginfo( 'name' ); ?></a>			
 	</div>
 	
 	<div class="mobile-menu">
-		<a href="javascript:void(0);" class="icon" onclick="myFunction()">
-		<b class="fa fa-bars"></b>
-		</a>
+		<button type="button" class="icon" onclick="myFunction()" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="myTopnav">
+		<span class="fa fa-bars" aria-hidden="true"></span>
+		</button>
 	</div>
 
    
 
       <div class="seven columns">
 
-        <div class="navigation">
+        <nav class="navigation" role="navigation" aria-label="Primary navigation">
 		<div class="topnav" id="myTopnav">
           <?php 
             if ( has_nav_menu( 'header-menu' ) ) {
@@ -90,12 +95,13 @@
             }
           ?>
 		</div>
-        </div>
+        </nav>
 
       </div>
 
-    </div>
+    </header>
 	
 
+<main id="main-content" role="main">
 
     

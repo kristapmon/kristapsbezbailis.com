@@ -65,23 +65,31 @@ add_action( 'after_setup_theme', 'theme_register_nav_menus' );
 
 
 <?php
-// Google Analytics tracking
+// Google Analytics tracking - GA4
+// Configured via Settings > Theme SEO
 
 add_action('wp_head', 'wpb_add_googleanalytics');
-function wpb_add_googleanalytics() { ?>
- 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-102277548-1"></script>
+function wpb_add_googleanalytics() { 
+    $options = theme_seo_get_options();
+    $ga4_measurement_id = $options['ga4_measurement_id'];
+    
+    // Only output if a valid GA4 ID is set
+    if (!empty($ga4_measurement_id) && strpos($ga4_measurement_id, 'G-') === 0) {
+        ?>
+<!-- Google Analytics 4 (GA4) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo esc_attr($ga4_measurement_id); ?>"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
-  gtag('config', 'UA-102277548-1');
+  gtag('config', '<?php echo esc_js($ga4_measurement_id); ?>');
 </script>
-
-
-<?php } ?>
+        <?php
+    }
+    // If no GA4 ID is configured, no tracking code is output
+    // Configure your GA4 ID in Settings > Theme SEO
+}
+?>
 
 <?php
 add_theme_support( 'post-thumbnails' );
@@ -1227,5 +1235,752 @@ class Icon_Nav_Walker extends Walker_Nav_Menu {
     }
 }
 /*Page Icon Selector end*/
+
+
+/* ========================================
+   Theme SEO Settings Admin Page
+   ======================================== */
+
+/**
+ * Get SEO options with defaults
+ */
+function theme_seo_get_options() {
+    $defaults = array(
+        // Analytics
+        'ga4_measurement_id' => '',
+        
+        // Social Profiles
+        'twitter_handle' => '',
+        'linkedin_url' => '',
+        'github_url' => '',
+        'instagram_url' => '',
+        'youtube_url' => '',
+        'facebook_url' => '',
+        
+        // About / Person Schema
+        'full_name' => '',
+        'job_title' => '',
+        'short_bio' => '',
+        
+        // Images
+        'default_og_image' => '',
+    );
+    
+    $options = get_option('theme_seo_options', array());
+    return wp_parse_args($options, $defaults);
+}
+
+/**
+ * Register settings
+ */
+function theme_seo_register_settings() {
+    register_setting(
+        'theme_seo_options_group',
+        'theme_seo_options',
+        'theme_seo_sanitize_options'
+    );
+}
+add_action('admin_init', 'theme_seo_register_settings');
+
+/**
+ * Sanitize options
+ */
+function theme_seo_sanitize_options($input) {
+    $sanitized = array();
+    
+    // Analytics
+    $sanitized['ga4_measurement_id'] = sanitize_text_field($input['ga4_measurement_id'] ?? '');
+    
+    // Social Profiles - sanitize URLs
+    $sanitized['twitter_handle'] = sanitize_text_field($input['twitter_handle'] ?? '');
+    $sanitized['linkedin_url'] = esc_url_raw($input['linkedin_url'] ?? '');
+    $sanitized['github_url'] = esc_url_raw($input['github_url'] ?? '');
+    $sanitized['instagram_url'] = esc_url_raw($input['instagram_url'] ?? '');
+    $sanitized['youtube_url'] = esc_url_raw($input['youtube_url'] ?? '');
+    $sanitized['facebook_url'] = esc_url_raw($input['facebook_url'] ?? '');
+    
+    // About / Person Schema
+    $sanitized['full_name'] = sanitize_text_field($input['full_name'] ?? '');
+    $sanitized['job_title'] = sanitize_text_field($input['job_title'] ?? '');
+    $sanitized['short_bio'] = sanitize_textarea_field($input['short_bio'] ?? '');
+    
+    // Images
+    $sanitized['default_og_image'] = esc_url_raw($input['default_og_image'] ?? '');
+    
+    return $sanitized;
+}
+
+/**
+ * Add settings page to admin menu
+ */
+function theme_seo_add_admin_menu() {
+    add_options_page(
+        'Theme SEO Settings',      // Page title
+        'Theme SEO',               // Menu title
+        'manage_options',          // Capability
+        'theme-seo-settings',      // Menu slug
+        'theme_seo_settings_page'  // Callback function
+    );
+}
+add_action('admin_menu', 'theme_seo_add_admin_menu');
+
+/**
+ * Enqueue admin scripts for media uploader
+ */
+function theme_seo_admin_scripts($hook) {
+    if ($hook !== 'settings_page_theme-seo-settings') {
+        return;
+    }
+    
+    wp_enqueue_media();
+    wp_enqueue_script(
+        'theme-seo-admin',
+        get_template_directory_uri() . '/assets/js/theme-seo-admin.js',
+        array('jquery'),
+        '1.0',
+        true
+    );
+    
+    // Add inline styles for the settings page
+    wp_add_inline_style('wp-admin', '
+        .theme-seo-wrap { max-width: 800px; }
+        .theme-seo-wrap .form-table th { width: 200px; padding: 20px 10px 20px 0; }
+        .theme-seo-wrap .form-table td { padding: 15px 10px; }
+        .theme-seo-wrap input[type="text"],
+        .theme-seo-wrap input[type="url"] { width: 100%; max-width: 400px; }
+        .theme-seo-wrap textarea { width: 100%; max-width: 400px; }
+        .theme-seo-wrap .description { color: #666; font-style: italic; margin-top: 5px; }
+        .theme-seo-wrap h2 { margin-top: 30px; padding-bottom: 10px; border-bottom: 1px solid #ccc; }
+        .theme-seo-wrap h2:first-of-type { margin-top: 20px; }
+        .theme-seo-wrap .image-preview { margin-top: 10px; }
+        .theme-seo-wrap .image-preview img { max-width: 300px; height: auto; border: 1px solid #ddd; border-radius: 4px; }
+        .theme-seo-wrap .button-remove-image { color: #a00; margin-left: 10px; }
+        .theme-seo-wrap .button-remove-image:hover { color: #dc3232; }
+    ');
+}
+add_action('admin_enqueue_scripts', 'theme_seo_admin_scripts');
+
+/**
+ * Settings page callback
+ */
+function theme_seo_settings_page() {
+    if (!current_user_can('manage_options')) {
+        return;
+    }
+    
+    $options = theme_seo_get_options();
+    ?>
+    <div class="wrap theme-seo-wrap">
+        <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
+        
+        <form action="options.php" method="post">
+            <?php settings_fields('theme_seo_options_group'); ?>
+            
+            <!-- Analytics Section -->
+            <h2>Analytics</h2>
+            <table class="form-table" role="presentation">
+                <tr>
+                    <th scope="row">
+                        <label for="ga4_measurement_id">GA4 Measurement ID</label>
+                    </th>
+                    <td>
+                        <input type="text" 
+                               id="ga4_measurement_id" 
+                               name="theme_seo_options[ga4_measurement_id]" 
+                               value="<?php echo esc_attr($options['ga4_measurement_id']); ?>"
+                               placeholder="G-XXXXXXXXXX"
+                               class="regular-text">
+                        <p class="description">
+                            Your Google Analytics 4 Measurement ID. Find it in GA4 > Admin > Data Streams.
+                            <br><a href="https://analytics.google.com/" target="_blank">Open Google Analytics</a>
+                        </p>
+                    </td>
+                </tr>
+            </table>
+            
+            <!-- Social Profiles Section -->
+            <h2>Social Profiles</h2>
+            <p class="description" style="margin-bottom: 15px;">These are used for schema.org Person markup and social meta tags.</p>
+            <table class="form-table" role="presentation">
+                <tr>
+                    <th scope="row">
+                        <label for="twitter_handle">Twitter / X Handle</label>
+                    </th>
+                    <td>
+                        <input type="text" 
+                               id="twitter_handle" 
+                               name="theme_seo_options[twitter_handle]" 
+                               value="<?php echo esc_attr($options['twitter_handle']); ?>"
+                               placeholder="@username"
+                               class="regular-text">
+                        <p class="description">Your Twitter/X username (with or without @)</p>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="linkedin_url">LinkedIn URL</label>
+                    </th>
+                    <td>
+                        <input type="url" 
+                               id="linkedin_url" 
+                               name="theme_seo_options[linkedin_url]" 
+                               value="<?php echo esc_url($options['linkedin_url']); ?>"
+                               placeholder="https://linkedin.com/in/username"
+                               class="regular-text">
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="github_url">GitHub URL</label>
+                    </th>
+                    <td>
+                        <input type="url" 
+                               id="github_url" 
+                               name="theme_seo_options[github_url]" 
+                               value="<?php echo esc_url($options['github_url']); ?>"
+                               placeholder="https://github.com/username"
+                               class="regular-text">
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="instagram_url">Instagram URL</label>
+                    </th>
+                    <td>
+                        <input type="url" 
+                               id="instagram_url" 
+                               name="theme_seo_options[instagram_url]" 
+                               value="<?php echo esc_url($options['instagram_url']); ?>"
+                               placeholder="https://instagram.com/username"
+                               class="regular-text">
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="youtube_url">YouTube URL</label>
+                    </th>
+                    <td>
+                        <input type="url" 
+                               id="youtube_url" 
+                               name="theme_seo_options[youtube_url]" 
+                               value="<?php echo esc_url($options['youtube_url']); ?>"
+                               placeholder="https://youtube.com/@channel"
+                               class="regular-text">
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="facebook_url">Facebook URL</label>
+                    </th>
+                    <td>
+                        <input type="url" 
+                               id="facebook_url" 
+                               name="theme_seo_options[facebook_url]" 
+                               value="<?php echo esc_url($options['facebook_url']); ?>"
+                               placeholder="https://facebook.com/page"
+                               class="regular-text">
+                    </td>
+                </tr>
+            </table>
+            
+            <!-- About You Section -->
+            <h2>About You (Schema)</h2>
+            <p class="description" style="margin-bottom: 15px;">Used for Person schema in search results and Knowledge Panel.</p>
+            <table class="form-table" role="presentation">
+                <tr>
+                    <th scope="row">
+                        <label for="full_name">Full Name</label>
+                    </th>
+                    <td>
+                        <input type="text" 
+                               id="full_name" 
+                               name="theme_seo_options[full_name]" 
+                               value="<?php echo esc_attr($options['full_name']); ?>"
+                               placeholder="<?php echo esc_attr(get_bloginfo('name')); ?>"
+                               class="regular-text">
+                        <p class="description">Defaults to site title if left empty</p>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="job_title">Job Title</label>
+                    </th>
+                    <td>
+                        <input type="text" 
+                               id="job_title" 
+                               name="theme_seo_options[job_title]" 
+                               value="<?php echo esc_attr($options['job_title']); ?>"
+                               placeholder="e.g., Designer, Developer, Writer"
+                               class="regular-text">
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="short_bio">Short Bio</label>
+                    </th>
+                    <td>
+                        <textarea id="short_bio" 
+                                  name="theme_seo_options[short_bio]" 
+                                  rows="3"
+                                  placeholder="A brief description about yourself..."><?php echo esc_textarea($options['short_bio']); ?></textarea>
+                        <p class="description">Used in schema.org Person description</p>
+                    </td>
+                </tr>
+            </table>
+            
+            <!-- Default Images Section -->
+            <h2>Default Images</h2>
+            <table class="form-table" role="presentation">
+                <tr>
+                    <th scope="row">
+                        <label for="default_og_image">Default OG Image</label>
+                    </th>
+                    <td>
+                        <input type="url" 
+                               id="default_og_image" 
+                               name="theme_seo_options[default_og_image]" 
+                               value="<?php echo esc_url($options['default_og_image']); ?>"
+                               class="regular-text">
+                        <button type="button" class="button" id="upload_og_image_button">Select Image</button>
+                        <button type="button" class="button button-remove-image" id="remove_og_image_button" style="<?php echo empty($options['default_og_image']) ? 'display:none;' : ''; ?>">Remove</button>
+                        <p class="description">Fallback image for social sharing when posts don't have a featured image. Recommended size: 1200x630px</p>
+                        <div class="image-preview" id="og_image_preview">
+                            <?php if (!empty($options['default_og_image'])) : ?>
+                                <img src="<?php echo esc_url($options['default_og_image']); ?>" alt="OG Image Preview">
+                            <?php endif; ?>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            
+            <?php submit_button('Save SEO Settings'); ?>
+        </form>
+    </div>
+    <?php
+}
+
+/* ========================================
+   End Theme SEO Settings Admin Page
+   ======================================== */
+
+
+/* ========================================
+   SEO Functions
+   ======================================== */
+
+/**
+ * Add meta description tag
+ */
+function theme_meta_description() {
+    $options = theme_seo_get_options();
+    $author_name = !empty($options['full_name']) ? $options['full_name'] : get_bloginfo('name');
+    
+    if (is_singular()) {
+        global $post;
+        $description = '';
+        
+        // Try to get excerpt first
+        if (has_excerpt($post->ID)) {
+            $description = get_the_excerpt();
+        } else {
+            // Fall back to trimmed content
+            $content = get_the_content();
+            $description = wp_trim_words(wp_strip_all_tags($content), 30, '...');
+        }
+        
+        if (!empty($description)) {
+            echo '<meta name="description" content="' . esc_attr($description) . '">' . "\n";
+        }
+    } elseif (is_home() || is_front_page()) {
+        $description = get_bloginfo('description');
+        if (!empty($description)) {
+            echo '<meta name="description" content="' . esc_attr($description) . '">' . "\n";
+        }
+    } elseif (is_archive()) {
+        if (is_post_type_archive()) {
+            $post_type = get_query_var('post_type');
+            $post_type_obj = get_post_type_object($post_type);
+            if ($post_type_obj) {
+                echo '<meta name="description" content="Browse all ' . esc_attr($post_type_obj->labels->name) . ' by ' . esc_attr($author_name) . '">' . "\n";
+            }
+        }
+    }
+}
+add_action('wp_head', 'theme_meta_description', 1);
+
+/**
+ * Add canonical URL
+ */
+function theme_canonical_url() {
+    if (is_singular()) {
+        echo '<link rel="canonical" href="' . esc_url(get_permalink()) . '">' . "\n";
+    } elseif (is_home() || is_front_page()) {
+        echo '<link rel="canonical" href="' . esc_url(home_url('/')) . '">' . "\n";
+    } elseif (is_archive()) {
+        if (is_post_type_archive()) {
+            echo '<link rel="canonical" href="' . esc_url(get_post_type_archive_link(get_query_var('post_type'))) . '">' . "\n";
+        }
+    }
+}
+add_action('wp_head', 'theme_canonical_url', 1);
+
+/**
+ * Add Open Graph meta tags
+ */
+function theme_open_graph_tags() {
+    $options = theme_seo_get_options();
+    $author_name = !empty($options['full_name']) ? $options['full_name'] : get_bloginfo('name');
+    $default_og_image = $options['default_og_image'];
+    
+    // Site name for all pages
+    echo '<meta property="og:site_name" content="' . esc_attr(get_bloginfo('name')) . '">' . "\n";
+    echo '<meta property="og:locale" content="en_US">' . "\n";
+    
+    if (is_singular()) {
+        global $post;
+        
+        // Get featured image or fallback to default OG image
+        $image = '';
+        if (has_post_thumbnail($post->ID)) {
+            $image = get_the_post_thumbnail_url($post->ID, 'large');
+        } elseif (!empty($default_og_image)) {
+            $image = $default_og_image;
+        }
+        
+        // Get description
+        $description = has_excerpt($post->ID) ? get_the_excerpt() : wp_trim_words(wp_strip_all_tags(get_the_content()), 30, '...');
+        
+        // Determine type based on post type
+        $og_type = 'article';
+        if (is_page()) {
+            $og_type = 'website';
+        }
+        
+        echo '<meta property="og:type" content="' . esc_attr($og_type) . '">' . "\n";
+        echo '<meta property="og:title" content="' . esc_attr(get_the_title()) . '">' . "\n";
+        echo '<meta property="og:description" content="' . esc_attr($description) . '">' . "\n";
+        echo '<meta property="og:url" content="' . esc_url(get_permalink()) . '">' . "\n";
+        
+        if (!empty($image)) {
+            echo '<meta property="og:image" content="' . esc_url($image) . '">' . "\n";
+        }
+        
+        // Article specific tags
+        if ($og_type === 'article') {
+            echo '<meta property="article:published_time" content="' . esc_attr(get_the_date('c')) . '">' . "\n";
+            echo '<meta property="article:modified_time" content="' . esc_attr(get_the_modified_date('c')) . '">' . "\n";
+            echo '<meta property="article:author" content="' . esc_attr($author_name) . '">' . "\n";
+        }
+    } elseif (is_home() || is_front_page()) {
+        echo '<meta property="og:type" content="website">' . "\n";
+        echo '<meta property="og:title" content="' . esc_attr(get_bloginfo('name')) . '">' . "\n";
+        echo '<meta property="og:description" content="' . esc_attr(get_bloginfo('description')) . '">' . "\n";
+        echo '<meta property="og:url" content="' . esc_url(home_url('/')) . '">' . "\n";
+        
+        // Add default OG image for home page
+        if (!empty($default_og_image)) {
+            echo '<meta property="og:image" content="' . esc_url($default_og_image) . '">' . "\n";
+        }
+    }
+}
+add_action('wp_head', 'theme_open_graph_tags', 5);
+
+/**
+ * Add Twitter Card meta tags
+ */
+function theme_twitter_card_tags() {
+    $options = theme_seo_get_options();
+    $twitter_handle = $options['twitter_handle'];
+    $default_og_image = $options['default_og_image'];
+    
+    // Use summary_large_image for better visibility
+    echo '<meta name="twitter:card" content="summary_large_image">' . "\n";
+    
+    // Add Twitter handle if configured
+    if (!empty($twitter_handle)) {
+        // Ensure handle starts with @
+        $handle = ltrim($twitter_handle, '@');
+        echo '<meta name="twitter:site" content="@' . esc_attr($handle) . '">' . "\n";
+        echo '<meta name="twitter:creator" content="@' . esc_attr($handle) . '">' . "\n";
+    }
+    
+    if (is_singular()) {
+        global $post;
+        
+        // Get featured image or fallback to default OG image
+        $image = '';
+        if (has_post_thumbnail($post->ID)) {
+            $image = get_the_post_thumbnail_url($post->ID, 'large');
+        } elseif (!empty($default_og_image)) {
+            $image = $default_og_image;
+        }
+        
+        // Get description
+        $description = has_excerpt($post->ID) ? get_the_excerpt() : wp_trim_words(wp_strip_all_tags(get_the_content()), 30, '...');
+        
+        echo '<meta name="twitter:title" content="' . esc_attr(get_the_title()) . '">' . "\n";
+        echo '<meta name="twitter:description" content="' . esc_attr($description) . '">' . "\n";
+        
+        if (!empty($image)) {
+            echo '<meta name="twitter:image" content="' . esc_url($image) . '">' . "\n";
+        }
+    } elseif (is_home() || is_front_page()) {
+        echo '<meta name="twitter:title" content="' . esc_attr(get_bloginfo('name')) . '">' . "\n";
+        echo '<meta name="twitter:description" content="' . esc_attr(get_bloginfo('description')) . '">' . "\n";
+        
+        // Add default OG image for home page
+        if (!empty($default_og_image)) {
+            echo '<meta name="twitter:image" content="' . esc_url($default_og_image) . '">' . "\n";
+        }
+    }
+}
+add_action('wp_head', 'theme_twitter_card_tags', 5);
+
+/**
+ * Add Person and WebSite schema (JSON-LD)
+ */
+function theme_schema_person_website() {
+    $options = theme_seo_get_options();
+    
+    // Get person name from options or fallback to site name
+    $person_name = !empty($options['full_name']) ? $options['full_name'] : get_bloginfo('name');
+    $job_title = $options['job_title'];
+    $short_bio = !empty($options['short_bio']) ? $options['short_bio'] : get_bloginfo('description');
+    
+    // Build social profiles array
+    $social_profiles = array();
+    
+    if (!empty($options['twitter_handle'])) {
+        $handle = ltrim($options['twitter_handle'], '@');
+        $social_profiles[] = 'https://twitter.com/' . $handle;
+    }
+    if (!empty($options['linkedin_url'])) {
+        $social_profiles[] = $options['linkedin_url'];
+    }
+    if (!empty($options['github_url'])) {
+        $social_profiles[] = $options['github_url'];
+    }
+    if (!empty($options['instagram_url'])) {
+        $social_profiles[] = $options['instagram_url'];
+    }
+    if (!empty($options['youtube_url'])) {
+        $social_profiles[] = $options['youtube_url'];
+    }
+    if (!empty($options['facebook_url'])) {
+        $social_profiles[] = $options['facebook_url'];
+    }
+    
+    $schema = array(
+        '@context' => 'https://schema.org',
+        '@graph' => array()
+    );
+    
+    // Person schema
+    $person = array(
+        '@type' => 'Person',
+        '@id' => home_url('/#person'),
+        'name' => $person_name,
+        'url' => home_url('/'),
+        'description' => $short_bio
+    );
+    
+    // Add job title if set
+    if (!empty($job_title)) {
+        $person['jobTitle'] = $job_title;
+    }
+    
+    // Add social profiles if any
+    if (!empty($social_profiles)) {
+        $person['sameAs'] = $social_profiles;
+    }
+    
+    // Add default OG image as person image if set
+    if (!empty($options['default_og_image'])) {
+        $person['image'] = $options['default_og_image'];
+    }
+    
+    // WebSite schema
+    $website = array(
+        '@type' => 'WebSite',
+        '@id' => home_url('/#website'),
+        'url' => home_url('/'),
+        'name' => get_bloginfo('name'),
+        'description' => get_bloginfo('description'),
+        'publisher' => array('@id' => home_url('/#person')),
+        'inLanguage' => 'en-US'
+    );
+    
+    $schema['@graph'][] = $person;
+    $schema['@graph'][] = $website;
+    
+    // Only output on front page to avoid duplication
+    if (is_front_page()) {
+        echo '<script type="application/ld+json">' . json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "\n";
+    }
+}
+add_action('wp_head', 'theme_schema_person_website', 10);
+
+/**
+ * Add Article/BlogPosting schema for single posts
+ */
+function theme_schema_article() {
+    if (!is_singular()) {
+        return;
+    }
+    
+    global $post;
+    $post_type = get_post_type();
+    
+    // Only for blog posts, notes, and projects
+    if (!in_array($post_type, array('post', 'notes', 'blog', 'projects'))) {
+        return;
+    }
+    
+    $options = theme_seo_get_options();
+    $author_name = !empty($options['full_name']) ? $options['full_name'] : get_bloginfo('name');
+    $default_og_image = $options['default_og_image'];
+    
+    // Determine schema type
+    $schema_type = 'Article';
+    if ($post_type === 'blog' || $post_type === 'post') {
+        $schema_type = 'BlogPosting';
+    } elseif ($post_type === 'projects') {
+        $schema_type = 'CreativeWork';
+    }
+    
+    $schema = array(
+        '@context' => 'https://schema.org',
+        '@type' => $schema_type,
+        '@id' => get_permalink() . '#article',
+        'headline' => get_the_title(),
+        'url' => get_permalink(),
+        'datePublished' => get_the_date('c'),
+        'dateModified' => get_the_modified_date('c'),
+        'author' => array(
+            '@type' => 'Person',
+            '@id' => home_url('/#person'),
+            'name' => $author_name
+        ),
+        'publisher' => array(
+            '@type' => 'Person',
+            '@id' => home_url('/#person'),
+            'name' => $author_name
+        ),
+        'isPartOf' => array(
+            '@id' => home_url('/#website')
+        ),
+        'inLanguage' => 'en-US'
+    );
+    
+    // Add description
+    if (has_excerpt($post->ID)) {
+        $schema['description'] = get_the_excerpt();
+    } else {
+        $schema['description'] = wp_trim_words(wp_strip_all_tags(get_the_content()), 30, '...');
+    }
+    
+    // Add featured image or fallback to default OG image
+    if (has_post_thumbnail($post->ID)) {
+        $image_id = get_post_thumbnail_id($post->ID);
+        $image_data = wp_get_attachment_image_src($image_id, 'full');
+        if ($image_data) {
+            $schema['image'] = array(
+                '@type' => 'ImageObject',
+                'url' => $image_data[0],
+                'width' => $image_data[1],
+                'height' => $image_data[2]
+            );
+        }
+    } elseif (!empty($default_og_image)) {
+        $schema['image'] = $default_og_image;
+    }
+    
+    // Add word count for articles
+    if ($schema_type === 'BlogPosting' || $schema_type === 'Article') {
+        $schema['wordCount'] = str_word_count(wp_strip_all_tags(get_the_content()));
+    }
+    
+    echo '<script type="application/ld+json">' . json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "\n";
+}
+add_action('wp_head', 'theme_schema_article', 10);
+
+/**
+ * Add BreadcrumbList schema
+ */
+function theme_schema_breadcrumbs() {
+    if (is_front_page()) {
+        return; // No breadcrumbs on home page
+    }
+    
+    $breadcrumbs = array();
+    $position = 1;
+    
+    // Home is always first
+    $breadcrumbs[] = array(
+        '@type' => 'ListItem',
+        'position' => $position++,
+        'name' => 'Home',
+        'item' => home_url('/')
+    );
+    
+    if (is_singular()) {
+        global $post;
+        $post_type = get_post_type();
+        
+        // Add post type archive if it exists
+        if (in_array($post_type, array('notes', 'projects', 'blog'))) {
+            $post_type_obj = get_post_type_object($post_type);
+            $archive_link = get_post_type_archive_link($post_type);
+            if ($archive_link) {
+                $breadcrumbs[] = array(
+                    '@type' => 'ListItem',
+                    'position' => $position++,
+                    'name' => $post_type_obj->labels->name,
+                    'item' => $archive_link
+                );
+            }
+        }
+        
+        // Current post
+        $breadcrumbs[] = array(
+            '@type' => 'ListItem',
+            'position' => $position++,
+            'name' => get_the_title(),
+            'item' => get_permalink()
+        );
+    } elseif (is_post_type_archive()) {
+        $post_type = get_query_var('post_type');
+        $post_type_obj = get_post_type_object($post_type);
+        $breadcrumbs[] = array(
+            '@type' => 'ListItem',
+            'position' => $position++,
+            'name' => $post_type_obj->labels->name,
+            'item' => get_post_type_archive_link($post_type)
+        );
+    } elseif (is_page()) {
+        global $post;
+        $breadcrumbs[] = array(
+            '@type' => 'ListItem',
+            'position' => $position++,
+            'name' => get_the_title(),
+            'item' => get_permalink()
+        );
+    }
+    
+    if (count($breadcrumbs) > 1) {
+        $schema = array(
+            '@context' => 'https://schema.org',
+            '@type' => 'BreadcrumbList',
+            'itemListElement' => $breadcrumbs
+        );
+        
+        echo '<script type="application/ld+json">' . json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "\n";
+    }
+}
+add_action('wp_head', 'theme_schema_breadcrumbs', 10);
+
+/* ========================================
+   End SEO Functions
+   ======================================== */
 
 ?>
