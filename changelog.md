@@ -1,5 +1,20 @@
 #[Unreleased]
 
+## [2026-02-13] — Switched body font to Plus Jakarta Sans
+
+**Type:** 🔧 Refactor
+
+**What changed:**
+- Replaced Inter with Plus Jakarta Sans for all body text (modern, highly readable)
+- Removed duplicate font loading (was loaded via both @import and link tags)
+- Cleaned up unused Raleway font that was being loaded but never used
+
+**Why it matters:** Text is now easier on the eyes with a more modern feel, and the page loads slightly faster with cleaner font loading.
+
+**Files touched:** `header.php`, `style.css`
+
+---
+
 ## Added
 - Homepage hero section with featured image and content display
   - Created front-page.php template for homepage-specific layout
