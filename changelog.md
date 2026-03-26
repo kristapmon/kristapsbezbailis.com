@@ -5,6 +5,29 @@ Versioning follows [Semantic Versioning](https://semver.org/) (MAJOR.MINOR.PATCH
 
 ---
 
+## [2.5.0] — 2026-02-16 — Blog timeline redesign with chat bubble cards and infinite scroll
+
+**Type:** 🆕 New
+
+**What changed:**
+- Redesigned blog posts section with timeline-style layout featuring chat bubble cards
+- Each post displays date, title, and excerpt in a rounded card with a speech bubble tail pointing up from the date
+- Added infinite scroll lazy loading — loads 10 posts at a time as user scrolls (replaces pagination)
+- Added support for intro text on blog page (add content to your Posts page and it appears below the headline)
+- Restructured blog page to match Projects page structure for consistent styling (same container, header, and title sizes)
+- Hover effect on cards: background darkens slightly for visual feedback
+- Fully responsive design for tablet and mobile views
+- Redesigned individual blog post pages with a new typography-focused layout: back link, centered date + reading time meta, large serif title, tag pills, full-width featured image, and scoped content styles
+- Scoped single post content styles cover headings (h2–h4), styled links, blockquotes with left accent border, dark code blocks, circle-bullet lists, image captions, and CTA buttons
+- Added `get_reading_time()` PHP helper that estimates reading time based on word count (~200 wpm)
+- Updated body text color to `#111827` (rgb(17, 24, 39)) for deeper, richer contrast
+
+**Why it matters:** The blog section now has a modern, visually engaging timeline design that's easier to browse with seamless infinite scrolling instead of clicking through pages. Individual posts now have a polished reading layout with rich typography that matches the overall site aesthetic.
+
+**Files touched:** `index.php`, `content.php`, `style.css`, `functions.php`, `single-blog.php`, `assets/js/timeline-lazy-load.js`
+
+---
+
 ## [2.4.0] — 2026-02-13 — Full SEO overhaul with admin settings panel
 
 **Type:** 🆕 New

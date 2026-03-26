@@ -8,6 +8,23 @@ function startwordpress_scripts() {
   wp_enqueue_style( 'phosphor-icons', 'https://unpkg.com/@phosphor-icons/web@2.0.3/src/regular/style.css' );
   wp_enqueue_style( 'remix-icon', 'https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css' );
   wp_enqueue_script( 'js', get_template_directory_uri() . '/assets/js/jQuery.js', array( 'jquery' ), true );
+  
+  // Timeline lazy loading script - only on blog index
+  if ( is_home() ) {
+    wp_enqueue_script( 
+      'timeline-lazy-load', 
+      get_template_directory_uri() . '/assets/js/timeline-lazy-load.js', 
+      array(), 
+      '1.0', 
+      true 
+    );
+    
+    // Localize script with AJAX URL and nonce
+    wp_localize_script( 'timeline-lazy-load', 'timelineAjax', array(
+      'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+      'nonce' => wp_create_nonce( 'timeline_load_more_nonce' ),
+    ));
+  }
 }
 
 add_action( 'wp_enqueue_scripts', 'startwordpress_scripts' );
@@ -1981,6 +1998,93 @@ add_action('wp_head', 'theme_schema_breadcrumbs', 10);
 
 /* ========================================
    End SEO Functions
+   ======================================== */
+
+
+/* ========================================
+   Timeline Blog - Lazy Loading
+   ======================================== */
+
+/**
+ * Limit blog posts per page to 10 for timeline lazy loading
+ */
+function timeline_posts_per_page($query) {
+    if (!is_admin() && $query->is_main_query() && $query->is_home()) {
+        $query->set('posts_per_page', 10);
+    }
+}
+add_action('pre_get_posts', 'timeline_posts_per_page');
+
+/**
+ * AJAX handler to load more timeline posts
+ */
+function load_more_timeline_posts() {
+    // Verify nonce for security
+    if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'timeline_load_more_nonce')) {
+        wp_send_json_error('Invalid security token');
+        return;
+    }
+    
+    $page = isset($_POST['page']) ? intval($_POST['page']) : 1;
+    
+    $args = array(
+        'post_type' => 'post',
+        'post_status' => 'publish',
+        'posts_per_page' => 10,
+        'paged' => $page,
+    );
+    
+    $query = new WP_Query($args);
+    
+    $html = '';
+    
+    if ($query->have_posts()) {
+        ob_start();
+        while ($query->have_posts()) {
+            $query->the_post();
+            get_template_part('content', get_post_format());
+        }
+        $html = ob_get_clean();
+        wp_reset_postdata();
+    }
+    
+    $has_more = $page < $query->max_num_pages;
+    
+    wp_send_json_success(array(
+        'html' => $html,
+        'has_more' => $has_more,
+        'current_page' => $page,
+        'max_pages' => $query->max_num_pages,
+    ));
+}
+add_action('wp_ajax_load_more_timeline_posts', 'load_more_timeline_posts');
+add_action('wp_ajax_nopriv_load_more_timeline_posts', 'load_more_timeline_posts');
+
+/* ========================================
+   End Timeline Blog Functions
+   ======================================== */
+
+
+/* ========================================
+   Single Blog Post Helpers
+   ======================================== */
+
+/**
+ * Calculate estimated reading time for a post
+ * Returns a string like "3 MIN READ"
+ */
+function get_reading_time($post_id = null) {
+    if (!$post_id) {
+        $post_id = get_the_ID();
+    }
+    $content = get_post_field('post_content', $post_id);
+    $word_count = str_word_count(wp_strip_all_tags($content));
+    $minutes = max(1, (int) round($word_count / 200));
+    return $minutes . ' MIN READ';
+}
+
+/* ========================================
+   End Single Blog Post Helpers
    ======================================== */
 
 ?>
