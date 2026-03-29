@@ -35,13 +35,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 
   <script>
-	function myFunction() {
-	  var x = document.getElementById("myTopnav");
-	  if (x.className === "topnav") {
-		x.className += " responsive";
-	  } else {
-		x.className = "topnav";
-	  }
+	function toggleMobileMenu() {
+	  var body = document.body;
+	  var btn = document.querySelector('.mobile-menu .icon');
+	  var icon = btn.querySelector('i');
+	  var isOpen = body.classList.toggle('mobile-menu-open');
+	  btn.setAttribute('aria-expanded', isOpen);
+	  icon.className = isOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
 	}
 	</script>
 
@@ -70,8 +70,8 @@
 	</div>
 	
 	<div class="mobile-menu">
-		<button type="button" class="icon" onclick="myFunction()" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="myTopnav">
-		<span class="fa fa-bars" aria-hidden="true"></span>
+		<button type="button" class="icon" onclick="toggleMobileMenu()" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-menu-overlay">
+		<i class="fa-solid fa-bars" aria-hidden="true"></i>
 		</button>
 	</div>
 
@@ -100,7 +100,26 @@
       </div>
 
     </header>
-	
+
+<div class="mobile-menu-overlay" id="mobile-menu-overlay" role="dialog" aria-label="Mobile navigation">
+  <nav aria-label="Mobile navigation">
+    <?php 
+      if ( has_nav_menu( 'header-menu' ) ) {
+          wp_nav_menu( array(
+              'theme_location' => 'header-menu',
+              'container'      => false,
+              'menu_class'     => 'mobile-menu-list',
+              'walker'         => new Icon_Nav_Walker(),
+              'fallback_cb'    => false
+          ) );
+      } else {
+          echo '<ul class="mobile-menu-list">';
+          wp_list_pages( '&title_li=' );
+          echo '</ul>';
+      }
+    ?>
+  </nav>
+</div>
 
 <main id="main-content" role="main">
 

@@ -2,7 +2,7 @@
 Theme Name: kristapsbezbailis.com - v2
 Author: Kristaps Bezbailis
 Description: Bootstrap Blog template converted to WordPress
-Version: 2.5
+Version: 2.6
 Tags: bootstrap
 */
 
@@ -238,7 +238,7 @@ img.aligncenter { display: block; margin-left: auto; margin-right: auto; width: 
 	display: inline-block;
 }
 
-.fa-navicon:before, .fa-reorder:before, .fa-bars:before {
+.fa-navicon:before, .fa-reorder:before {
     content: "MENU";
 	font-size: 14px;
 }
@@ -274,9 +274,15 @@ img.aligncenter { display: block; margin-left: auto; margin-right: auto; width: 
 	
 	
 	 .topnav li {display: none;}
-	 .mobile-menu a.icon {
-		float: center;
+	 .mobile-menu .icon {
 		display: block;
+		background: none;
+		border: none;
+		cursor: pointer;
+		color: var(--text);
+		font-size: 30px;
+		padding: 0;
+		margin-left: auto;
 	  }
 	  
 	.navigation {
@@ -289,19 +295,73 @@ img.aligncenter { display: block; margin-left: auto; margin-right: auto; width: 
 }
   
 
-@media screen and (max-width: 925px) {
-  .topnav.responsive {position: relative;}
-  .mobile-menu.responsive a.icon {
-    position: absolute;
-	width: 100%;
-    right: 0;
-    top: 0;
+/* Mobile menu overlay - hidden entirely on desktop */
+@media screen and (min-width: 926px) {
+  .mobile-menu-overlay {
+    display: none;
   }
-  .topnav.responsive li {
-    float: none;
-    display: block;
-    text-align: right;
-  }
+}
+
+.mobile-menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+body.mobile-menu-open .mobile-menu-overlay {
+  opacity: 1;
+  visibility: visible;
+}
+
+body.mobile-menu-open {
+  overflow: hidden;
+}
+
+body.mobile-menu-open .mobile-menu .icon {
+  position: fixed;
+  top: 1.6rem;
+  right: 5%;
+  z-index: 10000;
+  font-size: 36px;
+  color: var(--text);
+  opacity: 0.9;
+}
+
+.mobile-menu-overlay .mobile-menu-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+.mobile-menu-overlay .mobile-menu-list li {
+  margin: 1.5rem 0;
+}
+
+.mobile-menu-overlay .mobile-menu-list li a {
+  font-family: 'Lora', serif;
+  font-size: 3.2rem;
+  font-weight: 500;
+  color: var(--text);
+  text-decoration: none;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.mobile-menu-overlay .mobile-menu-list li a:hover {
+  opacity: 1;
+}
+
+.mobile-menu-overlay .mobile-menu-list li a i,
+.mobile-menu-overlay .mobile-menu-list li a .menu-emoji {
+  margin-right: 0.3em;
 }
 
 /* ------------------------------------------------------------ */
@@ -907,19 +967,19 @@ div.mce-success-response {
   }
   
   .project-card-title {
-    font-size: 3rem;
+    font-size: 4.2rem;
   }
   
   .project-card-excerpt {
-    font-size: 2rem;
+    font-size: 2.8rem;
   }
   
   .project-card-link {
-    font-size: 2rem;
+    font-size: 2.8rem;
   }
   
   .single-project-excerpt {
-    font-size: 1.1rem;
+    font-size: 1.5rem;
   }
   
   .single-project-header {
@@ -1194,7 +1254,7 @@ div.mce-success-response {
   }
 
   .timeline-date {
-    font-size: 13px;
+    font-size: 18px;
   }
 
   .timeline-content {
@@ -1215,11 +1275,11 @@ div.mce-success-response {
   }
   
   .timeline-title {
-    font-size: 3rem;
+    font-size: 4.2rem;
   }
 
   .timeline-excerpt {
-    font-size: 2rem;
+    font-size: 2.8rem;
   }
   
   .timeline-loader {
@@ -1413,6 +1473,7 @@ div.mce-success-response {
   background: rgba(0, 0, 0, 0.06);
   padding: 0.15em 0.4em;
   border-radius: 3px;
+  border: none;
 }
 
 .single-post-content pre code {
@@ -1421,6 +1482,7 @@ div.mce-success-response {
   font-size: inherit;
   color: inherit;
   border-radius: 0;
+  border: none;
 }
 
 /* Unordered lists */
@@ -1564,30 +1626,39 @@ div.mce-success-response {
   }
 
   .single-post-header h1 {
-    font-size: 3.8rem;
+    font-size: 5.3rem;
   }
 
   .single-post-meta {
-    font-size: 11px;
+    font-size: 15px;
   }
 
   .single-post-content {
-    font-size: 2rem;
+    font-size: 2.8rem;
   }
 
   .single-post-content h2 {
-    font-size: 2.8rem;
+    font-size: 3.9rem;
     margin: 2rem 0 0.75rem;
   }
 
   .single-post-content h3 {
-    font-size: 2.3rem;
+    font-size: 3.2rem;
     margin: 1.75rem 0 0.6rem;
   }
 
+  .single-post-content h4 {
+    font-size: 2.7rem;
+  }
+
   .single-post-content pre {
-    font-size: 1.6rem;
+    font-size: 2.2rem;
     padding: 1.25rem;
+  }
+
+  .single-post-tag {
+    font-size: 2rem;
+    padding: 0.4em 0.9em;
   }
 
   .single-post-featured-image {

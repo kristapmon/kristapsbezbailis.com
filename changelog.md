@@ -5,6 +5,28 @@ Versioning follows [Semantic Versioning](https://semver.org/) (MAJOR.MINOR.PATCH
 
 ---
 
+## [2.6.0] — 2026-03-29 — Mobile overlay menu, code snippet fix, and mobile font scaling
+
+### Fixed
+- Removed unwanted border on code snippets inside blog posts (Skeleton's `border: 1px solid #E1E1E1` was bleeding through — added `border: none` to `.single-post-content code` and `.single-post-content pre code`)
+- Fixed mobile menu button never appearing (CSS selector targeted `a.icon` but HTML used `<button>` — changed to `.mobile-menu .icon`)
+
+### Added
+- Fullscreen overlay mobile menu: hamburger button (top-right, Font Awesome `fa-bars`) opens a centered overlay with vertically-stacked menu links; close button swaps to `fa-xmark`; body scroll locked while open; smooth fade transition
+- Mobile font size override for tag pills (`.single-post-tag`) in the 600px breakpoint
+
+### Changed
+- Increased mobile font sizes (max-width: 600px) across all content sections using a 1.4x proportional multiplier:
+  - **Single post:** body text 2rem → 2.8rem, h1 3.8rem → 5.3rem, h2 2.8rem → 3.9rem, h3 2.3rem → 3.2rem, h4 (new) 2.7rem, pre 1.6rem → 2.2rem, meta 11px → 15px, tags 11px → 2rem
+  - **Timeline (blog index):** title 3rem → 4.2rem, excerpt 2rem → 2.8rem, date 13px → 18px
+  - **Projects:** card title 3rem → 4.2rem, card excerpt 2rem → 2.8rem, card link 2rem → 2.8rem, single project excerpt 1.1rem → 1.5rem
+- Enlarged mobile hamburger icon from 22px to 30px; close (X) button on overlay set to 36px for better visibility
+- Replaced `content: "MENU"` text override on `.fa-bars:before` with proper Font Awesome bars icon
+
+**Files touched:** `style.css`, `header.php`
+
+---
+
 ## [2.5.0] — 2026-02-16 — Blog timeline redesign with chat bubble cards and infinite scroll
 
 **Type:** 🆕 New
