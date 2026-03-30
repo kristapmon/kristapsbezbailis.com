@@ -1255,6 +1255,30 @@ class Icon_Nav_Walker extends Walker_Nav_Menu {
 
 
 /* ========================================
+   Highlight parent menu items on singles
+   ======================================== */
+
+function theme_menu_highlight_parent($classes, $item) {
+    if (is_singular('post')) {
+        $blog_page_id = get_option('page_for_posts');
+        if ($blog_page_id && (int) $item->object_id === (int) $blog_page_id) {
+            $classes[] = 'current_page_item';
+        }
+    }
+
+    if (is_singular('projects')) {
+        $projects_page = get_page_by_path('projects');
+        if ($projects_page && (int) $item->object_id === (int) $projects_page->ID) {
+            $classes[] = 'current_page_item';
+        }
+    }
+
+    return $classes;
+}
+add_filter('nav_menu_css_class', 'theme_menu_highlight_parent', 10, 2);
+
+
+/* ========================================
    Theme SEO Settings Admin Page
    ======================================== */
 

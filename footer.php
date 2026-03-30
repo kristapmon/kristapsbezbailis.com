@@ -38,9 +38,16 @@
     <nav class="footer-navigation" role="navigation" aria-label="Footer navigation">
 
       <?php
-
-        wp_list_pages( '&title_li=' ); // Gets the list of Pages and displays in the navigation
-
+        if ( has_nav_menu( 'header-menu' ) ) {
+            wp_nav_menu( array(
+                'theme_location' => 'header-menu',
+                'container'      => false,
+                'items_wrap'     => '%3$s',
+                'fallback_cb'    => false
+            ) );
+        } else {
+            wp_list_pages( '&title_li=' );
+        }
       ?>
 
     </nav>

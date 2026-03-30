@@ -5,6 +5,23 @@ Versioning follows [Semantic Versioning](https://semver.org/) (MAJOR.MINOR.PATCH
 
 ---
 
+## [2.8.0] — 2026-03-30 — Menu hover cleanup, active state fix, and footer menu sync
+
+### Changed
+- Removed underline hover effects from all navigation menus: stripped `border-bottom` from global `nav a` and `text-decoration: underline` from footer links — hover now only changes opacity/visibility
+- Footer menu links now use the same opacity-based hover as the header (0.7 default, 1 on hover with smooth transition)
+- Footer menu now uses `wp_nav_menu()` with the `header-menu` location instead of `wp_list_pages()`, so it shows the same items in the same order as the header
+
+### Fixed
+- Menu items now stay visually active when viewing a single blog post or project detail page (added `nav_menu_css_class` filter that applies `current_page_item` to the parent page's menu item)
+
+### Added
+- Active state styling (`current_page_item`) for footer and mobile overlay menus, matching the header's bold/full-opacity treatment
+
+**Files touched:** `style.css`, `functions.php`, `footer.php`
+
+---
+
 ## [2.7.0] — 2026-03-30 — Newsletter redesign with admin settings
 
 ### Added
