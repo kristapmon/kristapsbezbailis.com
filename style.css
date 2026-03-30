@@ -522,209 +522,146 @@ font-weight: 100 !important;
 /* ------------------------------------------------------------ */
 /*                     Newsletter styling                       */
 /* ------------------------------------------------------------ */
-.newsletter-signup {
-	max-width: 860px;
-    margin: 25px auto 25px auto;
-	padding: 3rem 0;
-    width: 100%;
-}
-
-.newsletter-description {
-	width: 48%;
-}
-
-.newsletter-signup-box {
-	width: 48%;
-	padding-top: 40px;
-}
-
-.newsletter-signup-box-spotlight {
-	width: 100%;
-	max-width: 860px;
-	margin-left: auto;
-	margin-right: auto;
-	padding: 15px;
-	margin-bottom: 5rem;
-	background: #f8f9fa;
-	border-radius: 10px;
-}
-
-p.newsletter-signup-box-spotlight  {
-	margin-bottom: 0;
-}
-
-.newsletter-width-spotlight {
-	width: 100%;
-}
-
-.newsletter-width {
-	width: 100%; 
-}
-
-#mc_embed_signup {
-  background: var(--bg);
-  clear: left;
-  font: 14px 'Source Serif 4', serif;
-  width: 100%;
-  max-width: 860px;
-  border: 1px solid;
-  border-radius: 10px;
-  border-color: var(--muted);
+.footer-separator {
+  width: 80%;
   margin: 0 auto;
+  border-top: 1px solid;
+  border-image: linear-gradient(to right, transparent, rgba(108, 117, 125, 0.35) 15%, rgba(108, 117, 125, 0.35) 85%, transparent) 1;
+}
+
+.newsletter-section {
+  padding: 2rem 15px;
+}
+
+.newsletter-card {
+  max-width: 860px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  background: #f5f6f7;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1.8rem 2rem;
+}
+
+.newsletter-card__info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+.newsletter-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #e8eaed;
+  color: var(--muted);
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.newsletter-card__text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.newsletter-card__text strong {
+  font-size: 15px;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.newsletter-card__text span {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.3;
+}
+
+.newsletter-card__form {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  position: relative;
+  margin: 0;
+  margin-bottom: 0;
+  padding: 0;
+}
+
+.newsletter-card__form input[type="email"] {
+  font-family: inherit;
+  font-size: 14px;
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #ffffff;
+  color: var(--text);
+  width: 280px;
+  height: 44px;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s;
+  margin-bottom: 0;
+}
+
+.newsletter-card__form input[type="email"]:focus {
+  border-color: var(--text);
+}
+
+.newsletter-card__form input[type="email"]::placeholder {
+  color: #9ca3af;
+}
+
+.newsletter-card__form button {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0 22px;
+  height: 44px;
+  border: none;
+  border-radius: 6px;
+  background: var(--text);
+  color: #ffffff;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+  margin-bottom: 0;
+}
+
+.newsletter-card__form button:hover {
+  opacity: 0.85;
 }
 
 @media (max-width: 750px) {
-	.six.columns {
-		width: 100%;
-		margin-left: 0px;
-	}
+  .newsletter-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 1.2rem;
+    padding: 1.5rem;
+  }
 
-	.newsletter-signup {
-		width: 100%;
-		padding: 0px;
-		text-align: center;
-	}
-	
-	.newsletter-description {
-		width: 100%;
-		padding-top: 3rem;
-	}
+  .newsletter-card__info {
+    flex-direction: column;
+  }
 
-	.newsletter-signup-box {
-		width: 100%;
-		padding: 10px;
-	}
-}
+  .newsletter-card__form {
+    width: 100%;
+  }
 
-div.mce_inline_error {
-	text-align: center;
-	color: red;
-	margin-bottom: 2rem;
-}
-
-div.mce-success-response {
-	text-align: center;
-	color: red;
-	margin-bottom: 2rem;
-	font-size: 12px;
-}
-
-
-
-#mce-success-response.response {
-	text-align: center;
-	color: green;
-	margin-bottom: 2rem;
-	font-size: 12px;
-}
-
-#mce-error-response.response {
-	text-align: center;
-	color: red;
-	margin-bottom: 2rem;
-	font-size: 12px;
-}
-
-#mc_embed_signup form {
-  text-align: center;
-  padding: 20px 0;
-}
-
-.mc-field-group {
-  display: inline-block; /* positions input field horizontally */
-  width: 100% !important;
-}
-
-#mc_embed_signup input.email {
-  font-family: 'Lora', serif;
-  font-size: 15px;
-  border: 1px solid var(--muted);
-  border-radius: 3px;
-  color: var(--text);
-  background-color: var(--bg);
-  box-sizing: border-box;
-  height: 32px;
-  padding: 0 0.4em;
-  display: inline-block;
-  margin: 0;
-  width: 350px;
-  vertical-align: top;
-}
-
-#mc_embed_signup label {
-  display:block;
-  font-size:16px;
-  padding-bottom:10px;
-  font-weight:bold;
-}
-
-#mc_embed_signup .clear {
-  display: inline-block; /* positions button horizontally in line with input */
-}
-
-#mc_embed_signup .button {
-  font-family: 'Lora', serif;
-  font-size: 13px;
-  border: none;
-  border-radius: 3px;
-  letter-spacing: .03em;
-  color: var(--bg);
-  background-color: var(--accent);
-  box-sizing: border-box;
-  height: 32px;
-  line-height: 32px;
-  padding: 0 20px;
-  display: inline-block;
-  margin: 0;
-  transition: all 0.23s ease-in-out 0s;
-}
-
-#mc_embed_signup .button:hover {
-  background-color: #005999;
-  cursor:pointer;
-}
-
-#mc_embed_signup div#mce-responses {
-  float:left;
-  top:-1.4em;
-  padding:0em .5em 0em .5em;
-  overflow:hidden;
-  width:90%;
-  margin: 0 5%;
-  clear: both;
-}
-
-#mc_embed_signup div.response {
-  margin:1em 0;
-  padding:1em .5em .5em 0;
-  font-weight:bold;
-  float:left;
-  top:-1.5em;
-  z-index:1;
-  width:80%;
-}
-
-#mc_embed_signup #mce-error-response {
-  display:none;
-}
-
-#mc_embed_signup #mce-success-response {
-  color:#28a745;
-  display:none;
-}
-
-#mc_embed_signup label.error {
-  display:block; float:none;
-  width:auto;
-  margin-left:1.05em;
-  text-align:left;
-  padding:.5em 0;
-}
-
-@media (max-width: 768px) {
-    #mc_embed_signup input.email {width:100%; margin-bottom:5px;}
-    #mc_embed_signup .clear {display: block; width: 100% }
-    #mc_embed_signup .button {width: 100%; margin:0; }
+  .newsletter-card__form input[type="email"] {
+    flex: 1;
+    width: auto;
+    min-width: 0;
+  }
 }
 
 /* ------------------------------------------------------------ */

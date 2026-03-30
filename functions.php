@@ -2087,4 +2087,193 @@ function get_reading_time($post_id = null) {
    End Single Blog Post Helpers
    ======================================== */
 
+
+/* ========================================
+   Newsletter Settings Admin Page
+   ======================================== */
+
+function theme_newsletter_get_options() {
+    $defaults = array(
+        'enabled'            => '1',
+        'heading'            => 'Subscribe to the newsletter',
+        'description'        => 'No spam, just my latest thoughts.',
+        'button_text'        => 'JOIN',
+        'form_action_url'    => 'https://kristapsbezbailis.us17.list-manage.com/subscribe/post?u=691797bab4dc502fcb95aa08c&amp;id=cf73f5d643',
+        'email_field_name'   => 'EMAIL',
+        'honeypot_field_name'=> 'b_691797bab4dc502fcb95aa08c_cf73f5d643',
+    );
+
+    $options = get_option('theme_newsletter_options', array());
+    return wp_parse_args($options, $defaults);
+}
+
+function theme_newsletter_register_settings() {
+    register_setting(
+        'theme_newsletter_options_group',
+        'theme_newsletter_options',
+        'theme_newsletter_sanitize_options'
+    );
+}
+add_action('admin_init', 'theme_newsletter_register_settings');
+
+function theme_newsletter_sanitize_options($input) {
+    $sanitized = array();
+
+    $sanitized['enabled']             = !empty($input['enabled']) ? '1' : '0';
+    $sanitized['heading']             = sanitize_text_field($input['heading'] ?? '');
+    $sanitized['description']         = sanitize_text_field($input['description'] ?? '');
+    $sanitized['button_text']         = sanitize_text_field($input['button_text'] ?? '');
+    $sanitized['form_action_url']     = esc_url_raw($input['form_action_url'] ?? '');
+    $sanitized['email_field_name']    = sanitize_text_field($input['email_field_name'] ?? '');
+    $sanitized['honeypot_field_name'] = sanitize_text_field($input['honeypot_field_name'] ?? '');
+
+    return $sanitized;
+}
+
+function theme_newsletter_add_menu() {
+    add_options_page(
+        'Newsletter Settings',
+        'Newsletter',
+        'manage_options',
+        'theme-newsletter-settings',
+        'theme_newsletter_settings_page'
+    );
+}
+add_action('admin_menu', 'theme_newsletter_add_menu');
+
+function theme_newsletter_settings_page() {
+    if (!current_user_can('manage_options')) {
+        return;
+    }
+
+    $options = theme_newsletter_get_options();
+    ?>
+    <div class="wrap">
+        <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
+
+        <form action="options.php" method="post">
+            <?php settings_fields('theme_newsletter_options_group'); ?>
+
+            <h2>Display</h2>
+            <table class="form-table" role="presentation">
+                <tr>
+                    <th scope="row">Show Newsletter Signup</th>
+                    <td>
+                        <label for="newsletter_enabled">
+                            <input type="checkbox"
+                                   id="newsletter_enabled"
+                                   name="theme_newsletter_options[enabled]"
+                                   value="1"
+                                   <?php checked($options['enabled'], '1'); ?>>
+                            Display the newsletter signup section on the site
+                        </label>
+                    </td>
+                </tr>
+            </table>
+
+            <h2>Content</h2>
+            <table class="form-table" role="presentation">
+                <tr>
+                    <th scope="row">
+                        <label for="newsletter_heading">Heading</label>
+                    </th>
+                    <td>
+                        <input type="text"
+                               id="newsletter_heading"
+                               name="theme_newsletter_options[heading]"
+                               value="<?php echo esc_attr($options['heading']); ?>"
+                               placeholder="Subscribe to the newsletter"
+                               class="regular-text">
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="newsletter_description">Description</label>
+                    </th>
+                    <td>
+                        <input type="text"
+                               id="newsletter_description"
+                               name="theme_newsletter_options[description]"
+                               value="<?php echo esc_attr($options['description']); ?>"
+                               placeholder="No spam, just my latest thoughts."
+                               class="regular-text">
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="newsletter_button_text">Button Text</label>
+                    </th>
+                    <td>
+                        <input type="text"
+                               id="newsletter_button_text"
+                               name="theme_newsletter_options[button_text]"
+                               value="<?php echo esc_attr($options['button_text']); ?>"
+                               placeholder="JOIN"
+                               class="small-text">
+                    </td>
+                </tr>
+            </table>
+
+            <h2>Email Provider</h2>
+            <p class="description" style="margin-bottom: 15px;">Configure the form endpoint for your email service (Mailchimp, ConvertKit, Buttondown, etc.).</p>
+            <table class="form-table" role="presentation">
+                <tr>
+                    <th scope="row">
+                        <label for="newsletter_form_action_url">Form Action URL</label>
+                    </th>
+                    <td>
+                        <input type="url"
+                               id="newsletter_form_action_url"
+                               name="theme_newsletter_options[form_action_url]"
+                               value="<?php echo esc_url($options['form_action_url']); ?>"
+                               placeholder="https://..."
+                               class="large-text">
+                        <p class="description">The URL your signup form submits to. Find this in your email provider's embed form settings.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="newsletter_email_field_name">Email Field Name</label>
+                    </th>
+                    <td>
+                        <input type="text"
+                               id="newsletter_email_field_name"
+                               name="theme_newsletter_options[email_field_name]"
+                               value="<?php echo esc_attr($options['email_field_name']); ?>"
+                               placeholder="EMAIL"
+                               class="regular-text">
+                        <p class="description">
+                            The <code>name</code> attribute for the email input. Common values:
+                            <strong>EMAIL</strong> (Mailchimp),
+                            <strong>email_address</strong> (ConvertKit),
+                            <strong>email</strong> (Buttondown).
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="newsletter_honeypot_field_name">Honeypot Field Name</label>
+                    </th>
+                    <td>
+                        <input type="text"
+                               id="newsletter_honeypot_field_name"
+                               name="theme_newsletter_options[honeypot_field_name]"
+                               value="<?php echo esc_attr($options['honeypot_field_name']); ?>"
+                               placeholder="b_xxxxxxx_xxxxxxx"
+                               class="regular-text">
+                        <p class="description">Optional. A hidden field name used to catch bots. Leave empty if your provider doesn't use one.</p>
+                    </td>
+                </tr>
+            </table>
+
+            <?php submit_button('Save Newsletter Settings'); ?>
+        </form>
+    </div>
+    <?php
+}
+
+/* ========================================
+   End Newsletter Settings Admin Page
+   ======================================== */
+
 ?>

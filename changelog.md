@@ -5,6 +5,23 @@ Versioning follows [Semantic Versioning](https://semver.org/) (MAJOR.MINOR.PATCH
 
 ---
 
+## [2.7.0] — 2026-03-30 — Newsletter redesign with admin settings
+
+### Added
+- Newsletter Settings admin page (Settings > Newsletter) for configuring heading, description, button text, form action URL, email field name, honeypot field name, and a toggle to show/hide the entire section — no template editing needed to change email provider or content
+- Footer separator line matching the header navigation gradient border, always visible regardless of newsletter toggle
+
+### Changed
+- Redesigned newsletter signup section: compact card layout with icon + text on the left, inline email input and JOIN button on the right (replaces the old two-column Mailchimp form)
+- Newsletter form values (action URL, field names, copy) are now pulled dynamically from WordPress options instead of being hardcoded in the template
+
+### Removed
+- Hardcoded Mailchimp form markup and Mailchimp validation script from footer.php (replaced by provider-agnostic form driven by admin settings)
+
+**Files touched:** `functions.php`, `footer.php`, `style.css`
+
+---
+
 ## [2.6.0] — 2026-03-29 — Mobile overlay menu, code snippet fix, and mobile font scaling
 
 ### Fixed
