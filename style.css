@@ -829,7 +829,11 @@ font-weight: 100 !important;
 }
 
 .single-project-title {
-  margin-bottom: 1rem;
+  font-size: 4.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text);
+  margin: 0.5rem 0 1.5rem;
 }
 
 .single-project-excerpt {
@@ -892,6 +896,10 @@ font-weight: 100 !important;
   .project-card-title {
     font-size: 2rem;
   }
+
+  .single-project-title {
+    font-size: 3.5rem;
+  }
 }
 
 /* Projects Responsive - Mobile */
@@ -914,15 +922,15 @@ font-weight: 100 !important;
   }
   
   .project-card-title {
-    font-size: 4.2rem;
+    font-size: 3rem;
   }
   
   .project-card-excerpt {
-    font-size: 2.8rem;
+    font-size: 2.5rem;
   }
   
   .project-card-link {
-    font-size: 2.8rem;
+    font-size: 2.5rem;
   }
   
   .single-project-excerpt {
@@ -931,6 +939,10 @@ font-weight: 100 !important;
   
   .single-project-header {
     margin-bottom: 2rem;
+  }
+
+  .single-project-title {
+    font-size: 4.2rem;
   }
 }
 
@@ -1222,11 +1234,11 @@ font-weight: 100 !important;
   }
   
   .timeline-title {
-    font-size: 4.2rem;
+    font-size: 3rem;
   }
 
   .timeline-excerpt {
-    font-size: 2.8rem;
+    font-size: 2.5rem;
   }
   
   .timeline-loader {
@@ -1340,6 +1352,14 @@ font-weight: 100 !important;
 }
 
 /* Headings inside content */
+.single-post-content h1 {
+  font-size: 3.8rem;
+  font-weight: 700;
+  margin: 2.5rem 0 1rem;
+  line-height: 1.2;
+  color: var(--text);
+}
+
 .single-post-content h2 {
   font-size: 2.8rem;
   font-weight: 700;
@@ -1573,7 +1593,7 @@ font-weight: 100 !important;
   }
 
   .single-post-header h1 {
-    font-size: 5.3rem;
+    font-size: 4.2rem;
   }
 
   .single-post-meta {
@@ -1581,11 +1601,16 @@ font-weight: 100 !important;
   }
 
   .single-post-content {
-    font-size: 2.8rem;
+    font-size: 2.5rem;
+  }
+
+  .single-post-content h1 {
+    font-size: 4.2rem;
+    margin: 2rem 0 0.75rem;
   }
 
   .single-post-content h2 {
-    font-size: 3.9rem;
+    font-size: 3.7rem;
     margin: 2rem 0 0.75rem;
   }
 

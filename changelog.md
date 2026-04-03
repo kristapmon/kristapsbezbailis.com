@@ -5,6 +5,21 @@ Versioning follows [Semantic Versioning](https://semver.org/) (MAJOR.MINOR.PATCH
 
 ---
 
+## [2.9.1] — 2026-04-03 — Mobile typography refinements
+
+### Changed
+- Mobile body text font-size reduced from `2.8rem` to `2.5rem` for `.project-card-excerpt`, `.project-card-link`, `.timeline-excerpt`, and `.single-post-content` — brings them in line with other mobile body elements
+- Mobile title font-size reduced from `4.2rem` to `3rem` for `.project-card-title` and `.timeline-title`
+- `single-post-header h1` mobile font-size reduced from `5.3rem` to `4.2rem`
+- `.single-post-content h2` mobile font-size reduced from `3.9rem` to `3.7rem`
+- `.single-project-title` now matches blog post title styles across all breakpoints — desktop `4.5rem`, tablet `3.5rem`, mobile `4.2rem` — with matching `font-weight`, `line-height`, and `color`
+
+### Added
+- `.single-project-title` mobile rule (`3rem`) added to the projects `@media (max-width: 600px)` block — previously had no mobile override
+- `.single-post-content h1` override added at `3.8rem` (desktop) and `4.2rem` (mobile) — overrides skeleton CSS global `h1` rule (`5.0rem` at ≥550px) for headings inside post content
+
+---
+
 ## [2.9.0] — 2026-03-30 — SEO/GEO metadata, semantic dates, security hardening, accessibility, and code hygiene
 
 ### Added
