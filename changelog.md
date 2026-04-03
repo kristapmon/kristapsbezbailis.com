@@ -5,6 +5,36 @@ Versioning follows [Semantic Versioning](https://semver.org/) (MAJOR.MINOR.PATCH
 
 ---
 
+## [2.9.0] — 2026-03-30 — SEO/GEO metadata, semantic dates, security hardening, accessibility, and code hygiene
+
+### Added
+- `<meta name="author" content="Kristaps Bezbailis">` tag output on every page via `wp_head` hook in `functions.php`
+- `<time datetime="...">` elements wrapping all post dates (ISO 8601 machine-readable attribute) in `content.php` (blog index timeline) and `single-blog.php` (single post meta)
+- `theme_robots_meta()` function hooked to `wp_head` — outputs `noindex, follow` on search/date/author/paginated pages; outputs `index, follow, max-snippet:-1, max-image-preview:large` on singular posts/pages
+- `potentialAction` (SearchAction) added to the WebSite JSON-LD schema in `theme_schema_person_website()` — enables Google sitelinks search box in search results
+- `assets/js/theme-nav.js` — extracted `toggleMobileMenu()` from inline `<head>` script into an enqueued file; extended with a full keyboard focus trap (Tab/Shift+Tab cycles within overlay), Escape key to close, focus-on-open (first focusable element), and focus-return-on-close (trigger button); `aria-hidden` toggled on the overlay
+
+### Changed
+- Enhanced `llms.txt` with expertise areas, a skills summary paragraph, and full canonical URLs for all sections — improves how AI crawlers (ChatGPT, Perplexity, etc.) represent the site
+- Replaced `style="margin-bottom: 0px;"` inline styles on both `<h1>` tags in `single-notes.php` with a `.notes-title` CSS class in `style.css`
+- Renamed `assets/js/jQuery.js` → `assets/js/theme-ui.js` and updated the `wp_enqueue_script` handle — file contained only navigation click handlers, not a jQuery library copy; renaming removes the misleading name from the Network tab
+- All hardcoded favicon, apple-touch-icon, and `manifest.json` paths in `header.php` replaced with `get_template_directory_uri()` — previously pointed at old theme folder name, causing 404s for every icon and the web manifest
+
+### Removed
+- Legacy `$GLOBALS['comment'] = $comment;` assignment from `customized_comment()` in `functions.php` — WordPress's walker loop sets this global automatically; the explicit assignment was redundant
+- Inline `<script>` block containing `toggleMobileMenu()` removed from `header.php` `<head>` — function now lives in the enqueued `theme-nav.js`
+
+### Fixed
+- `Uncaught TypeError: $ is not a function` console error on all pages — WordPress loads jQuery in no-conflict mode; wrapped `theme-ui.js` content in `jQuery(function ($) { … })` to pass `$` as a scoped alias
+
+### Security
+- Added `if ( ! defined( 'ABSPATH' ) ) { exit; }` guard to all 14 PHP template files (`header.php`, `footer.php`, `index.php`, `page.php`, `page-single.php`, `front-page.php`, `single.php`, `single-blog.php`, `single-notes.php`, `single-projects.php`, `template-notes.php`, `template-projects.php`, `content.php`, `comments.php`) — prevents direct HTTP execution of template files
+- `theme_add_sri_attributes()` filter on `style_loader_tag` — adds `integrity` and `crossorigin="anonymous"` attributes to the Font Awesome (6.5.1), Phosphor Icons (2.0.3), and Remix Icon (4.2.0) CDN stylesheet tags; hashes generated from the exact pinned CDN URLs
+
+**Files touched:** `llms.txt`, `functions.php`, `content.php`, `single-blog.php`, `single-notes.php`, `single-projects.php`, `single.php`, `header.php`, `footer.php`, `index.php`, `page.php`, `page-single.php`, `front-page.php`, `template-notes.php`, `template-projects.php`, `comments.php`, `style.css`, `assets/js/theme-nav.js` (new), `assets/js/theme-ui.js` (renamed from `jQuery.js`)
+
+---
+
 ## [2.8.0] — 2026-03-30 — Menu hover cleanup, active state fix, and footer menu sync
 
 ### Changed

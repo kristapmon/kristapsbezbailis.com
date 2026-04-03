@@ -475,6 +475,10 @@ img.book-cover-detail  {
 	font-style: italic;
 }
 
+.notes-title {
+	margin-bottom: 0;
+}
+
 .notes-category-detail {
 	font-size: 1.7rem;
 	text-transform: uppercase;

@@ -1,4 +1,5 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 	// This page loops in single blog post and displays single-blog.php content
 
@@ -33,7 +34,7 @@
 		
 		?>
 		
-		<h1 style="margin-bottom: 0px;"><?php the_title();?></h1>
+		<h1 class="notes-title"><?php the_title();?></h1>
 		<div class="notes-category-detail"><?php echo $post_terms[0]->name; ?></div>
 		
 		<?php
@@ -42,7 +43,7 @@
 		
 		?>
 		
-			<h1 style="margin-bottom: 0px;"><?php the_title();?></h1>
+			<h1 class="notes-title"><?php the_title();?></h1>
 
 		<?php endif; ?>
 

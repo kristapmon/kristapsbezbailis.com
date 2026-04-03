@@ -1,9 +1,12 @@
+<?php if ( ! defined( 'ABSPATH' ) ) { exit; } ?>
 <!-- Displays Blog Post Index page content and styling - loaded by index.php -->
 <!-- Timeline item structure for blog posts -->
 
 <a href="<?php the_permalink(); ?>" class="timeline-item">
 	<div class="timeline-date">
-		<?php echo get_the_date('jS F Y'); ?>
+		<time datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>">
+			<?php echo esc_html( get_the_date( 'jS F Y' ) ); ?>
+		</time>
 	</div>
 	<div class="timeline-content">
 		<h3 class="timeline-title"><?php the_title(); ?></h3>

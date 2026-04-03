@@ -1,4 +1,5 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) { exit; }
 /**
  * Single blog post template
  */
@@ -18,7 +19,9 @@ $blog_label   = $blog_page_id ? strtoupper(get_the_title($blog_page_id)) : 'THOU
 
 		<header class="single-post-header">
 			<p class="single-post-meta">
-				<?php echo esc_html(get_the_date('jS F Y')); ?>
+				<time datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>">
+					<?php echo esc_html( get_the_date( 'jS F Y' ) ); ?>
+				</time>
 				&bull;
 				<?php echo esc_html(get_reading_time()); ?>
 			</p>

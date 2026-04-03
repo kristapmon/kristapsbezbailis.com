@@ -1,4 +1,5 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) { exit; }
 /**
  * Template Name: Projects
  * Description: A page template to display all projects in a card grid layout

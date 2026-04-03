@@ -1,3 +1,4 @@
+<?php if ( ! defined( 'ABSPATH' ) ) { exit; } ?>
 <!-- Content for the Static pages - loaded by single.php -->
 
 <?php

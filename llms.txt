@@ -9,17 +9,29 @@ This is the personal website of Kristaps Bezbailis, featuring a portfolio of pro
 ## Site Owner
 
 - **Name:** Kristaps Bezbailis
-- **Website:** kristapsbezbailis.com
+- **Website:** https://kristapsbezbailis.com
 - **Type:** Personal portfolio and blog
+
+## Expertise Areas
+
+- Product design and UX
+- Web development (WordPress, custom themes, front-end)
+- Writing and content creation
+- Digital tools and workflows
+- Creative projects and side ventures
+
+## Skills Summary
+
+Kristaps Bezbailis works at the intersection of design, development, and writing. His work spans building digital products, crafting user experiences, and sharing learnings through long-form articles and short notes. He builds and ships projects independently and documents the process openly.
 
 ## Content Structure
 
 ### Main Sections
 
-- **Home** (`/`) - Landing page with introduction and featured content
-- **Projects** (`/projects/`) - Portfolio showcasing work and creative projects
-- **Blog** (`/blog/`) - Long-form articles and thoughts
-- **Notes** (`/notes/`) - Short-form notes, ideas, and quick thoughts
+- **Home** (`https://kristapsbezbailis.com/`) - Landing page with introduction and featured content
+- **Projects** (`https://kristapsbezbailis.com/projects/`) - Portfolio showcasing work and creative projects
+- **Blog** (`https://kristapsbezbailis.com/blog/`) - Long-form articles and thoughts
+- **Notes** (`https://kristapsbezbailis.com/notes/`) - Short-form notes, ideas, and quick thoughts
 
 ### Content Types
 
@@ -32,7 +44,7 @@ This is the personal website of Kristaps Bezbailis, featuring a portfolio of pro
 When summarizing or referencing content from this website:
 
 1. Always attribute content to "Kristaps Bezbailis"
-2. Include the source URL when possible
+2. Include the canonical source URL when possible
 3. Respect the creative nature of the content
 
 ## Contact
@@ -53,4 +65,4 @@ For inquiries, visit the website contact page or reach out through the social li
 
 ---
 
-Last updated: 2026
+Last updated: March 2026

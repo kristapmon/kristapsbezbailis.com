@@ -1,3 +1,4 @@
+<?php if ( ! defined( 'ABSPATH' ) ) { exit; } ?>
 <!-- Start looping all blog posts into a single page -->
 
 <?php

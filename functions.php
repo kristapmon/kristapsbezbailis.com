@@ -7,8 +7,9 @@ function startwordpress_scripts() {
   wp_enqueue_style( 'font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css' );
   wp_enqueue_style( 'phosphor-icons', 'https://unpkg.com/@phosphor-icons/web@2.0.3/src/regular/style.css' );
   wp_enqueue_style( 'remix-icon', 'https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css' );
-  wp_enqueue_script( 'js', get_template_directory_uri() . '/assets/js/jQuery.js', array( 'jquery' ), true );
-  
+  wp_enqueue_script( 'theme-ui', get_template_directory_uri() . '/assets/js/theme-ui.js', array( 'jquery' ), true );
+  wp_enqueue_script( 'theme-nav', get_template_directory_uri() . '/assets/js/theme-nav.js', array(), '1.0.0', true );
+
   // Timeline lazy loading script - only on blog index
   if ( is_home() ) {
     wp_enqueue_script( 
@@ -29,6 +30,24 @@ function startwordpress_scripts() {
 
 add_action( 'wp_enqueue_scripts', 'startwordpress_scripts' );
 
+// SRI integrity attributes for CDN stylesheets
+function theme_add_sri_attributes( $html, $handle ) {
+    $sri_hashes = array(
+        'font-awesome'   => 'sha384-t1nt8BQoYMLFN5p42tRAtuAAFQaCQODekUVeKKZrEnEyp4H2R0RHFz0KWpmj7i8g',
+        'phosphor-icons' => 'sha384-Qs19WEVUqj3AkH1SXDy/ThYIpWJXaWVskjSjHHiyAdX1gJgmfXMpBW/ej/67WEwY',
+        'remix-icon'     => 'sha384-6FSSi597BTd6QcnsBNoLclRKxTOyyYqkaucRjFgCNr8wHVCp0COLClSPY4Vy/bjh',
+    );
+    if ( isset( $sri_hashes[ $handle ] ) ) {
+        $html = str_replace(
+            " rel='stylesheet'",
+            " rel='stylesheet' integrity='" . esc_attr( $sri_hashes[ $handle ] ) . "' crossorigin='anonymous'",
+            $html
+        );
+    }
+    return $html;
+}
+add_filter( 'style_loader_tag', 'theme_add_sri_attributes', 10, 2 );
+
 // WordPress Titles
 add_theme_support( 'title-tag' );
 
@@ -45,7 +64,6 @@ add_action( 'after_setup_theme', 'theme_register_nav_menus' );
 
   //Comment section content formatting
   function customized_comment($comment, $args, $depth) {
-      $GLOBALS['comment'] = $comment; //What does this do?
 ?>
 
 <li class="comment-single-section" >
@@ -109,6 +127,12 @@ function wpb_add_googleanalytics() {
 ?>
 
 <?php
+// Author meta tag
+function theme_author_meta_tag() {
+    echo '<meta name="author" content="' . esc_attr( 'Kristaps Bezbailis' ) . '">' . "\n";
+}
+add_action( 'wp_head', 'theme_author_meta_tag' );
+
 add_theme_support( 'post-thumbnails' );
 
 
@@ -1666,6 +1690,20 @@ function theme_canonical_url() {
 add_action('wp_head', 'theme_canonical_url', 1);
 
 /**
+ * Output robots meta tag with appropriate directives per page type.
+ * Search, date, author, and paginated pages are noindexed to avoid thin content.
+ * Singular pages get the full indexing directives including AI snippet hints.
+ */
+function theme_robots_meta() {
+    if ( is_search() || is_date() || is_author() || is_paged() ) {
+        echo '<meta name="robots" content="noindex, follow">' . "\n";
+    } elseif ( is_singular() ) {
+        echo '<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">' . "\n";
+    }
+}
+add_action('wp_head', 'theme_robots_meta', 1);
+
+/**
  * Add Open Graph meta tags
  */
 function theme_open_graph_tags() {
@@ -1848,7 +1886,12 @@ function theme_schema_person_website() {
         'name' => get_bloginfo('name'),
         'description' => get_bloginfo('description'),
         'publisher' => array('@id' => home_url('/#person')),
-        'inLanguage' => 'en-US'
+        'inLanguage' => 'en-US',
+        'potentialAction' => array(
+            '@type'       => 'SearchAction',
+            'target'      => home_url('/?s={search_term_string}'),
+            'query-input' => 'required name=search_term_string'
+        )
     );
     
     $schema['@graph'][] = $person;

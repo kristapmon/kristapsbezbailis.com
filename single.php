@@ -1,4 +1,5 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 	// This page loops in single blog post and displays single-blog.php content
 

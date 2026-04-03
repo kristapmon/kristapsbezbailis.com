@@ -1,4 +1,5 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 /* If post is protected by a password and the visitor has not yet
 entered the password - will return early without loading the comments.*/
