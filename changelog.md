@@ -5,6 +5,17 @@ Versioning follows [Semantic Versioning](https://semver.org/) (MAJOR.MINOR.PATCH
 
 ---
 
+## [2.9.2] — 2026-04-03 — Consistent container width across all pages
+
+### Fixed
+- Removed redundant nested `<div class="container">` from `template-projects.php`, `template-notes.php`, and `index.php` — each was adding a second `.container` inside the outer one already provided by `header.php`, causing Projects, Notes, and Thoughts pages to render at ~85% of the intended width
+- Removed `max-width: 800px` from `.timeline-container` and `.timeline-loader` in `style.css` — was capping the Thoughts page post bubbles to 800px instead of filling the full container
+
+### Changed
+- `.container` `max-width` reduced from `1200px` to `1020px` in `style.css` — all pages now share a consistent content width of `1020px` on desktop (`85%` of viewport) and `90%` on mobile
+
+---
+
 ## [2.9.1] — 2026-04-03 — Mobile typography refinements
 
 ### Changed

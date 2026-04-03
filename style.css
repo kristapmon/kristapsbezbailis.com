@@ -2,7 +2,7 @@
 Theme Name: kristapsbezbailis.com - v2
 Author: Kristaps Bezbailis
 Description: Bootstrap Blog template converted to WordPress
-Version: 2.6
+Version: 2.9.2
 Tags: bootstrap
 */
 
@@ -35,7 +35,7 @@ font-family: 'Lora', serif;
 .container {
   position: relative;
   width: 90%;
-  max-width: 1200px;
+  max-width: 1020px;
   margin: 0 auto;
   box-sizing: border-box;
 }
@@ -1069,7 +1069,6 @@ font-weight: 100 !important;
 
 .timeline-container {
   position: relative;
-  max-width: 800px;
   margin: 0 auto;
   padding: 0 0 2rem 0;
 }
@@ -1148,7 +1147,6 @@ font-weight: 100 !important;
   justify-content: center;
   gap: 1rem;
   padding: 2rem;
-  max-width: 800px;
   margin: 0 auto;
 }
 

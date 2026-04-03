@@ -8,7 +8,6 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 get_header(); ?>
 
 <section class="projects-section">
-	<div class="container">
 		
 		<div class="projects-header">
 			<h1><?php the_page_title_with_icon(); ?></h1>
@@ -96,7 +95,7 @@ get_header(); ?>
 			<?php endif; ?>
 		</div>
 
-	</div>
+
 </section>
 
 <?php get_footer(); ?>

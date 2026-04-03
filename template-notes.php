@@ -6,7 +6,6 @@ get_header();
 ?>
 
 <section class="notes-section">
-	<div class="container">
 		
 		<div class="notes-header">
 			<h1><?php the_page_title_with_icon(); ?></h1>
@@ -95,7 +94,7 @@ if ( have_posts() ) : while ( have_posts() ) : the_post();
 	wp_reset_query();
 ?>
 
-	</div>
+
 </section>
 
 <?php

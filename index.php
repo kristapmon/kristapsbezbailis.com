@@ -25,7 +25,6 @@ if ($blog_page_id) {
 ?>
 
 <section class="timeline-section">
-	<div class="container">
 		
 		<div class="timeline-header">
 			<h1>
@@ -82,7 +81,7 @@ if ($blog_page_id) {
 		</div>
 		<?php endif; ?>
 
-	</div>
+
 </section>
 
 <?php
