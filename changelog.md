@@ -5,6 +5,30 @@ Versioning follows [Semantic Versioning](https://semver.org/) (MAJOR.MINOR.PATCH
 
 ---
 
+## [Unreleased]
+
+---
+
+## [2.9.3] — 2026-04-23 — Markdown content negotiation for AI agents
+
+### Added
+- `inc/class-theme-html-to-markdown.php` (new) — dependency-free `DOMDocument`-based HTML→Markdown converter handling headings, paragraphs, nested ordered/unordered lists, links, images (with `data-src` fallback for lazy-loaded media), inline formatting (`**bold**`, `*italic*`, `~~strike~~`, inline `` `code` ``), fenced code blocks, blockquotes, `<hr>`, `<br>` hard breaks, `<figure>` + caption, `<iframe>` (rendered as a plain link), and GFM tables; unknown wrappers (e.g. WordPress's `<div class="wp-block-*">`) recurse transparently into their children
+- `inc/markdown-negotiation.php` (new) — `template_redirect` hook (priority `1`) that inspects the `Accept` header, detects when `text/markdown` is preferred over `text/html` via q-value parsing, and short-circuits template loading to emit a markdown representation with `Content-Type: text/markdown; charset=utf-8`, `X-Markdown-Tokens: <N>` (chars/4 heuristic), and `Vary: Accept`; renderers cover the front page, all singular post types (post, page, blog, notes, projects), the Thoughts blog index (`is_home()`), the Projects and Notes page templates, tag/category/author/date/post-type/search archives, and 404s
+- Canonical-URL footer (`<https://…>`) appended to every markdown response so agents can resolve the authoritative source
+
+### Changed
+- `functions.php` — two `require_once` lines added directly after `add_action( 'wp_enqueue_scripts', 'startwordpress_scripts' );` to load the converter and negotiation module; no other functions.php behavior affected
+
+### Security
+- Negotiation handler early-returns for admin, AJAX, REST, cron, XML-RPC, feed, embed, trackback, robots, preview, and password-protected requests — markdown output is limited strictly to public front-end content
+- `Vary: Accept` emitted so reverse proxies / Cloudflare cache HTML and markdown representations separately
+
+**Validation:** `curl -H 'Accept: text/markdown' https://kristapsbezbailis.com/` returns a markdown body with the headers above; browsers (which send `Accept: text/html,…`) continue receiving HTML unchanged. Confirms the [markdown-negotiation skill](https://isitagentready.com/.well-known/agent-skills/markdown-negotiation/SKILL.md) and matches [Cloudflare's Markdown for Agents](https://developers.cloudflare.com/fundamentals/reference/markdown-for-agents/) contract.
+
+**Files touched:** `inc/class-theme-html-to-markdown.php` (new), `inc/markdown-negotiation.php` (new), `functions.php`
+
+---
+
 ## [2.9.2] — 2026-04-03 — Consistent container width across all pages
 
 ### Fixed
