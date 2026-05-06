@@ -1525,6 +1525,80 @@ font-weight: 100 !important;
   margin-top: 0.5rem;
 }
 
+/* YouTube lazy embeds */
+.theme-youtube-embed {
+  position: relative;
+  display: block;
+  width: 100%;
+  margin: 2rem auto;
+  overflow: hidden;
+  cursor: pointer;
+  background: #000000;
+  border-radius: 6px;
+}
+
+.theme-youtube-embed::before {
+  display: block;
+  padding-bottom: var(--theme-youtube-ratio, 56.25%);
+  content: "";
+}
+
+.theme-youtube-embed img,
+.theme-youtube-embed iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.theme-youtube-embed img {
+  object-fit: cover;
+  transition: opacity 0.2s ease;
+}
+
+.theme-youtube-embed:hover img,
+.theme-youtube-embed:focus img {
+  opacity: 0.85;
+}
+
+.theme-youtube-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 68px;
+  height: 48px;
+  background: rgba(0, 0, 0, 0.72);
+  border-radius: 12px;
+  transform: translate(-50%, -50%);
+  transition: background 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+}
+
+.theme-youtube-embed:hover .theme-youtube-play,
+.theme-youtube-embed:focus .theme-youtube-play {
+  background: #ff0000;
+  transform: translate(-50%, -50%) scale(1.05);
+}
+
+.theme-youtube-play svg {
+  width: 28px;
+  height: 28px;
+  fill: #ffffff;
+}
+
+.theme-youtube-embed:focus {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.theme-youtube-error {
+  color: #c00000;
+}
+
 /* CTA / Button blocks */
 .single-post-content .wp-block-button__link,
 .single-post-content .wp-block-button a,

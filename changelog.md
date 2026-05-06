@@ -7,6 +7,14 @@ Versioning follows [Semantic Versioning](https://semver.org/) (MAJOR.MINOR.PATCH
 
 ## [Unreleased]
 
+### Added
+- Lazy YouTube embeds for posts, pages, Notes, and Projects: standalone pasted YouTube URLs now render as responsive click-to-load embeds using `youtube-nocookie.com`, while inline/manual YouTube links remain plain links
+- `[youtube]` shortcode support with `id` or `url` plus optional `ratio`, `start`, `title`, `width`, and `autoplay` attributes
+- `assets/js/youtube-embeds.js` and `inc/youtube-embeds.php` to keep the embed behavior modular and avoid loading the full YouTube iframe until playback is requested
+
+### Changed
+- Markdown content negotiation now converts lazy YouTube wrappers back into canonical YouTube links instead of exposing only thumbnail images
+
 ---
 
 ## [2.9.3] — 2026-04-23 — Markdown content negotiation for AI agents

@@ -32,6 +32,7 @@ add_action( 'wp_enqueue_scripts', 'startwordpress_scripts' );
 
 require_once get_template_directory() . '/inc/class-theme-html-to-markdown.php';
 require_once get_template_directory() . '/inc/markdown-negotiation.php';
+require_once get_template_directory() . '/inc/youtube-embeds.php';
 
 // SRI integrity attributes for CDN stylesheets
 function theme_add_sri_attributes( $html, $handle ) {

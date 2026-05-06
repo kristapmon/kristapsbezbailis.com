@@ -136,6 +136,30 @@ class Theme_Html_To_Markdown {
 				}
 				return "\n\n[Embedded content: " . $src . '](' . $src . ")\n\n";
 
+			case 'div':
+				$classes = ' ' . $this->attr( $node, 'class' ) . ' ';
+				if ( strpos( $classes, ' theme-youtube-embed ' ) !== false ) {
+					$id = $this->attr( $node, 'data-youtube-id' );
+					if ( $id === '' ) {
+						return '';
+					}
+
+					$title = $this->attr( $node, 'data-youtube-title' );
+					if ( $title === '' ) {
+						$title = 'YouTube video';
+					}
+
+					$url = 'https://www.youtube.com/watch?v=' . rawurlencode( $id );
+					$start = (int) $this->attr( $node, 'data-youtube-start' );
+					if ( $start > 0 ) {
+						$url .= '&t=' . $start . 's';
+					}
+
+					return "\n\n[Embedded content: " . $title . '](' . $url . ")\n\n";
+				}
+
+				return $this->walk_children( $node );
+
 			case 'blockquote':
 				$inner = trim( $this->walk_children( $node ) );
 				if ( $inner === '' ) {
