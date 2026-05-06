@@ -15,6 +15,9 @@ Versioning follows [Semantic Versioning](https://semver.org/) (MAJOR.MINOR.PATCH
 ### Changed
 - Markdown content negotiation now converts lazy YouTube wrappers back into canonical YouTube links instead of exposing only thumbnail images
 
+### Fixed
+- Classic Editor YouTube embeds now convert cached/default YouTube iframe HTML and standalone auto-linked YouTube URLs into the lazy responsive embed
+
 ---
 
 ## [2.9.3] — 2026-04-23 — Markdown content negotiation for AI agents

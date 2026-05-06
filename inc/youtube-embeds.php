@@ -176,6 +176,72 @@ function theme_youtube_render_embed( $args ) {
 	);
 }
 
+function theme_youtube_replace_iframe_html( $matches ) {
+	$iframe = $matches[0];
+	$src = '';
+
+	if ( preg_match( '/\ssrc=(["\'])(.*?)\1/i', $iframe, $src_matches ) ) {
+		$src = html_entity_decode( $src_matches[2], ENT_QUOTES, get_bloginfo( 'charset' ) );
+	}
+
+	if ( ! theme_youtube_is_url( $src ) ) {
+		return $iframe;
+	}
+
+	$title = __( 'YouTube video', 'kristapsbezbailis' );
+	if ( preg_match( '/\stitle=(["\'])(.*?)\1/i', $iframe, $title_matches ) ) {
+		$title = html_entity_decode( $title_matches[2], ENT_QUOTES, get_bloginfo( 'charset' ) );
+	}
+
+	$embed = theme_youtube_render_embed(
+		array(
+			'url'   => $src,
+			'title' => $title,
+		)
+	);
+
+	return $embed === '' ? $iframe : $embed;
+}
+
+function theme_youtube_replace_standalone_link_html( $matches ) {
+	$href = html_entity_decode( $matches[3], ENT_QUOTES, get_bloginfo( 'charset' ) );
+	$text = trim( wp_strip_all_tags( html_entity_decode( $matches[4], ENT_QUOTES, get_bloginfo( 'charset' ) ) ) );
+
+	if ( ! theme_youtube_is_url( $href ) || ! theme_youtube_is_url( $text ) ) {
+		return $matches[0];
+	}
+
+	if ( theme_youtube_extract_id( $href ) !== theme_youtube_extract_id( $text ) ) {
+		return $matches[0];
+	}
+
+	$embed = theme_youtube_render_embed(
+		array(
+			'url' => $href,
+		)
+	);
+
+	return $embed === '' ? $matches[0] : $matches[1] . $embed . $matches[5];
+}
+
+function theme_youtube_replace_classic_editor_embeds( $content ) {
+	if ( stripos( $content, 'youtube' ) === false && stripos( $content, 'youtu.be' ) === false ) {
+		return $content;
+	}
+
+	$content = preg_replace_callback( '/<iframe\b[^>]*><\/iframe>/i', 'theme_youtube_replace_iframe_html', $content );
+
+	// Classic editor can auto-link a pasted standalone URL instead of leaving bare text for oEmbed.
+	$content = preg_replace_callback(
+		'/(<p[^>]*>\s*)<a\b[^>]*\shref=(["\'])(.*?)\2[^>]*>(.*?)<\/a>(\s*<\/p>)/is',
+		'theme_youtube_replace_standalone_link_html',
+		$content
+	);
+
+	return $content;
+}
+add_filter( 'the_content', 'theme_youtube_replace_classic_editor_embeds', 13 );
+
 function theme_youtube_shortcode( $atts ) {
 	$atts = shortcode_atts(
 		array(
