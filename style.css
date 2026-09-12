@@ -1599,6 +1599,15 @@ font-weight: 100 !important;
   color: #c00000;
 }
 
+/* X / Twitter embeds — matches the blockquote and the iframe the widget script
+   swaps in, for both block (.wp-block-embed.is-provider-x / -twitter) and
+   classic editor embeds. !important is required: the widget sets inline
+   horizontal margins on the rendered iframe. */
+.twitter-tweet {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
 /* CTA / Button blocks */
 .single-post-content .wp-block-button__link,
 .single-post-content .wp-block-button a,

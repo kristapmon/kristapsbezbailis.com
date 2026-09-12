@@ -17,6 +17,7 @@ Versioning follows [Semantic Versioning](https://semver.org/) (MAJOR.MINOR.PATCH
 
 ### Fixed
 - Classic Editor YouTube embeds now convert cached/default YouTube iframe HTML and standalone auto-linked YouTube URLs into the lazy responsive embed
+- Embedded X/Twitter posts are now centered in the content column instead of hugging the left edge, for both block and Classic Editor embeds
 
 ---
 
