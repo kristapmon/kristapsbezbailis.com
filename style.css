@@ -174,10 +174,17 @@ img.aligncenter { display: block; margin-left: auto; margin-right: auto; width: 
 /* ------------------------------------------------------------ */
 
 .navigation-cover {
+  display: flex;
+  align-items: center;
   padding: 1rem 0;
   margin-bottom: 3rem;
   border-bottom: 1px solid;
   border-image: linear-gradient(to right, transparent, rgba(108, 117, 125, 0.35) 15%, rgba(108, 117, 125, 0.35) 85%, transparent) 1;
+}
+
+/* Skeleton's .row::after clearfix becomes a stray flex item; drop it on the header. */
+.navigation-cover.row::after {
+  content: none;
 }
 
 .navigation {
@@ -273,29 +280,31 @@ main > .header-detail:first-child {
 @media screen and (max-width: 925px) {
 
 	.navigation-cover {
+		justify-content: space-between;
 		margin-bottom: 1rem;
 	}
-	
+
 	.site-title a {
-		float: left;
+		float: none;
 		font-size: 18px;
 	}
 		
 	.five.columns {
-		width: 70%; 
+		width: 70%;
+		min-width: 0;
 	}
 
 	.mobile-menu {
-		float: right;
+		float: none;
+		box-sizing: border-box;
 		text-align: right;
 		width: 20%;
 		padding: 14px 16px;
+		flex: 0 0 auto;
 	}
 
 	.seven.columns {
-		width: 100%;
-		margin-left: auto;
-		float: center;
+		display: none;
 	}
 	
 	.site-title a {
@@ -327,7 +336,8 @@ main > .header-detail:first-child {
 
 /* Mobile menu overlay - hidden entirely on desktop */
 @media screen and (min-width: 926px) {
-  .mobile-menu-overlay {
+  .mobile-menu-overlay,
+  .navigation-cover .mobile-menu {
     display: none;
   }
 }
