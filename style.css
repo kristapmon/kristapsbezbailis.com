@@ -198,7 +198,8 @@ img.aligncenter { display: block; margin-left: auto; margin-right: auto; width: 
 }
 
 .navigation li {
-  float:left;
+  float: left;
+  margin-bottom: 0; /* override Skeleton's global li { margin-bottom: 1rem } */
 }
 
 .navigation li a {
@@ -295,6 +296,9 @@ main > .header-detail:first-child {
 	}
 
 	.mobile-menu {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
 		float: none;
 		box-sizing: border-box;
 		text-align: right;
@@ -314,14 +318,23 @@ main > .header-detail:first-child {
 	
 	 .topnav li {display: none;}
 	 .mobile-menu .icon {
-		display: block;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		background: none;
 		border: none;
 		cursor: pointer;
 		color: var(--text);
 		font-size: 30px;
+		line-height: 1;
+		height: auto; /* override Skeleton's global button { height: 38px } */
 		padding: 0;
-		margin-left: auto;
+		margin: 0 0 0 auto; /* also kill Skeleton's button { margin-bottom: 1rem } */
+	  }
+
+	 .mobile-menu .icon i {
+		display: block;
+		line-height: 1;
 	  }
 	  
 	.navigation {
