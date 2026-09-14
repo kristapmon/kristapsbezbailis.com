@@ -8,11 +8,22 @@ Versioning follows [Semantic Versioning](https://semver.org/) (MAJOR.MINOR.PATCH
 ## [Unreleased]
 
 ### Added
+- Per-post "Social Sharing" meta box (posts, pages, Notes, Projects) for an Open Graph title, description, and image override; works in both the block editor and the Classic Editor and shows the computed fallback as placeholder text
+- `inc/social-meta.php` (new) — single resolver (`theme_social_meta_get_data()`) with the fallback chain override → featured image → first image in content → site default, used by the meta description, Open Graph, Twitter Card, and Article JSON-LD so they can no longer disagree
+- `inc/social-meta-editor.php` and `assets/js/theme-social-meta-box.js` (new) — meta box, `register_post_meta`, save handler, media picker with 1200×630 size/ratio warning and character counters
+- `og:image:width`, `og:image:height`, `og:image:alt`, `og:image:type`, `og:image:secure_url`, `twitter:image:alt`, and `article:tag` tags
+- `theme-og-image` (1200×630, hard crop) image size for featured-image share cards
+- Settings > Theme SEO: "Social Sharing (Open Graph)" section with site name override, default description, and the default image now stored as an attachment ID (URL kept for back-compat)
+- Automatic disable of theme social tags when Yoast, Rank Math, SEOPress, or All in One SEO is active (`theme_social_meta_enabled` filter)
 - Lazy YouTube embeds for posts, pages, Notes, and Projects: standalone pasted YouTube URLs now render as responsive click-to-load embeds using `youtube-nocookie.com`, while inline/manual YouTube links remain plain links
 - `[youtube]` shortcode support with `id` or `url` plus optional `ratio`, `start`, `title`, `width`, and `autoplay` attributes
 - `assets/js/youtube-embeds.js` and `inc/youtube-embeds.php` to keep the embed behavior modular and avoid loading the full YouTube iframe until playback is requested
 
 ### Changed
+- Open Graph / Twitter description now strips shortcodes and block markup before trimming, so `[youtube]` and similar no longer leak into share previews
+- The Thoughts blog index now uses its page title/override for `og:title` instead of the site name; category, tag, and author archives now receive `og:type`, `og:title`, `og:url`, `og:description`
+- `article:author` now emits the Facebook profile URL when set (spec-compliant) instead of a plain name
+- `theme_meta_description()`, `theme_open_graph_tags()`, `theme_twitter_card_tags()` removed from `functions.php` (superseded by `inc/social-meta.php`)
 - Markdown content negotiation now converts lazy YouTube wrappers back into canonical YouTube links instead of exposing only thumbnail images
 - Header-to-body spacing is now identical on every template: 50px from the header rule to the first body block on desktop (>925px), 30px on tablet (601–925px), 20px on mobile (≤600px). `.navigation-cover` `margin-bottom` goes from `1rem` to `3rem` above 925px (back to `1rem` below), and every template now follows the sections' `padding-top: 2rem` / mobile `1rem` convention: `.hero-section` (home) gains `padding-top`, `.single-post-back` goes from `1.5rem` to `2rem`, the first `.header-detail` on a single Note drops from `3rem` to `2rem`, `.single-project` and `.timeline-section` get the missing `1rem` mobile override, and static pages are wrapped in `<article class="static-page">` (`page-single.php`) with the same padding
 
