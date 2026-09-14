@@ -154,7 +154,7 @@ img.aligncenter { display: block; margin-left: auto; margin-right: auto; width: 
 
 .navigation-cover {
   padding: 1rem 0;
-  margin-bottom: 1rem;
+  margin-bottom: 3rem;
   border-bottom: 1px solid;
   border-image: linear-gradient(to right, transparent, rgba(108, 117, 125, 0.35) 15%, rgba(108, 117, 125, 0.35) 85%, transparent) 1;
 }
@@ -239,6 +239,10 @@ img.aligncenter { display: block; margin-left: auto; margin-right: auto; width: 
 
 
 @media screen and (max-width: 925px) {
+
+	.navigation-cover {
+		margin-bottom: 1rem;
+	}
 	
 	.site-title a {
 		float: left;
@@ -499,10 +503,6 @@ img.book-cover-detail  {
 }
 
 @media screen and (max-width: 925px) {
-	
-	.row {
-		border: solid 0px;
-	}
 	
 	.two.columns {
 		width: auto;

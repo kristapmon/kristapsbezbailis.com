@@ -14,8 +14,10 @@ Versioning follows [Semantic Versioning](https://semver.org/) (MAJOR.MINOR.PATCH
 
 ### Changed
 - Markdown content negotiation now converts lazy YouTube wrappers back into canonical YouTube links instead of exposing only thumbnail images
+- Desktop header-to-body spacing increased by 20px: `.navigation-cover` `margin-bottom` goes from `1rem` (10px) to `3rem` (30px) above the 925px breakpoint, applied uniformly to the home page, single posts, Projects, and Thoughts/Notes. Mobile keeps the previous `1rem` via an override in the existing `max-width: 925px` header block
 
 ### Fixed
+- Mobile header now shows the same horizontal rule as desktop (1px gradient border under the site title / menu button). A leftover `.row { border: solid 0px; }` in the `max-width: 925px` block was zeroing the header's `border-bottom` because the header is `.row.navigation-cover`; the no-op rule is removed
 - Classic Editor YouTube embeds now convert cached/default YouTube iframe HTML and standalone auto-linked YouTube URLs into the lazy responsive embed
 - Embedded X/Twitter posts are now centered in the content column instead of hugging the left edge, for both block and Classic Editor embeds
 
