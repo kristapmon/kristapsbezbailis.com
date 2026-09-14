@@ -9,7 +9,7 @@ Versioning follows [Semantic Versioning](https://semver.org/) (MAJOR.MINOR.PATCH
 
 ### Added
 - Per-post "Social Sharing" meta box (posts, pages, Notes, Projects) for an Open Graph title, description, and image override; works in both the block editor and the Classic Editor and shows the computed fallback as placeholder text
-- `inc/social-meta.php` (new) — single resolver (`theme_social_meta_get_data()`) with the fallback chain override → featured image → first image in content → site default, used by the meta description, Open Graph, Twitter Card, and Article JSON-LD so they can no longer disagree
+- `inc/social-meta.php` (new) — single resolver (`theme_social_meta_get_data()`) with the fallback chain override → featured image (1200×630 crop) → site default, used by the meta description, Open Graph, Twitter Card, and Article JSON-LD so they can no longer disagree
 - `inc/social-meta-editor.php` and `assets/js/theme-social-meta-box.js` (new) — meta box, `register_post_meta`, save handler, media picker with 1200×630 size/ratio warning and character counters
 - `og:image:width`, `og:image:height`, `og:image:alt`, `og:image:type`, `og:image:secure_url`, `twitter:image:alt`, and `article:tag` tags
 - `theme-og-image` (1200×630, hard crop) image size for featured-image share cards

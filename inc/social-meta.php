@@ -94,45 +94,6 @@ function theme_social_meta_featured_image( $post_id ) {
 }
 
 /**
- * First image referenced in post content: wp-image-{id} class, else first https <img>.
- *
- * @param WP_Post $post Post.
- * @return array{url:string,width:int,height:int,alt:string,mime:string}|null
- */
-function theme_social_meta_first_content_image( $post ) {
-	if ( ! $post instanceof WP_Post ) {
-		return null;
-	}
-
-	$content = (string) $post->post_content;
-	if ( $content === '' ) {
-		return null;
-	}
-
-	if ( preg_match( '/wp-image-(\d+)/', $content, $matches ) ) {
-		$image = theme_social_meta_image_from_attachment( (int) $matches[1], 'full' );
-		if ( $image ) {
-			return $image;
-		}
-	}
-
-	if ( preg_match( '/<img[^>]+src=["\'](https:\/\/[^"\']+)["\']/i', $content, $matches ) ) {
-		$url = esc_url_raw( $matches[1] );
-		if ( $url !== '' && strpos( $url, 'https://' ) === 0 ) {
-			return array(
-				'url'    => $url,
-				'width'  => 0,
-				'height' => 0,
-				'alt'    => '',
-				'mime'   => '',
-			);
-		}
-	}
-
-	return null;
-}
-
-/**
  * Site-wide default OG image (attachment ID, with lazy URL→ID resolution).
  *
  * @return array{url:string,width:int,height:int,alt:string,mime:string}|null
@@ -304,9 +265,6 @@ function theme_social_meta_resolve_post( $post, $ignore_overrides = false ) {
 	}
 	if ( ! $image ) {
 		$image = theme_social_meta_featured_image( $post_id );
-	}
-	if ( ! $image && ! post_password_required( $post ) ) {
-		$image = theme_social_meta_first_content_image( $post );
 	}
 	if ( ! $image ) {
 		$image = theme_social_meta_default_image();

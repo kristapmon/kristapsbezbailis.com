@@ -1684,7 +1684,7 @@ function theme_seo_settings_page() {
                                class="regular-text">
                         <button type="button" class="button" id="upload_og_image_button">Select Image</button>
                         <button type="button" class="button button-remove-image" id="remove_og_image_button" style="<?php echo empty($options['default_og_image']) ? 'display:none;' : ''; ?>">Remove</button>
-                        <p class="description">Fallback when a post has no override, featured image, or inline image. Recommended 1200×630 px (1.91:1), JPG or PNG, under 5 MB. Minimum 600×315.</p>
+                        <p class="description">Used when a post has no override and no featured image. Recommended 1200×630 px (1.91:1), JPG or PNG, under 5 MB. Minimum 600×315.</p>
                         <div class="image-preview" id="og_image_preview">
                             <?php if (!empty($options['default_og_image'])) : ?>
                                 <img src="<?php echo esc_url($options['default_og_image']); ?>" alt="OG Image Preview">

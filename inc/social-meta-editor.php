@@ -118,13 +118,13 @@ function theme_social_meta_box_callback( $post ) {
 	}
 
 	$warning = theme_social_meta_image_size_warning( $width, $height );
-	$fallback_image_note = 'Leave empty to use the featured image, then the first image in the content, then the site default.';
+	$fallback_image_note = 'Leave empty to use the featured image, then the site default.';
 	if ( ! empty( $fallback['image']['url'] ) ) {
 		$fallback_image_note .= ' Current fallback: the image WordPress will pick automatically.';
 	}
 	?>
 	<div class="theme-social-meta-box">
-		<p class="description">Overrides used only on share cards (Facebook, X, LinkedIn). The browser title is unchanged. Recommended image: 1200×630 px (1.91:1), JPG or PNG, under 5 MB. Minimum 600×315. Images added only at render time (shortcodes, oEmbed) are not used as fallbacks.</p>
+		<p class="description">Overrides used only on share cards (Facebook, X, LinkedIn). The browser title is unchanged. Image fallback: this override, then the featured image (1200×630 crop), then the site default. Recommended image: 1200×630 px (1.91:1), JPG or PNG, under 5 MB. Minimum 600×315.</p>
 
 		<p>
 			<label for="theme_og_title"><strong>OG title</strong></label><br>
