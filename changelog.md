@@ -14,7 +14,7 @@ Versioning follows [Semantic Versioning](https://semver.org/) (MAJOR.MINOR.PATCH
 
 ### Changed
 - Markdown content negotiation now converts lazy YouTube wrappers back into canonical YouTube links instead of exposing only thumbnail images
-- Desktop header-to-body spacing increased by 20px: `.navigation-cover` `margin-bottom` goes from `1rem` (10px) to `3rem` (30px) above the 925px breakpoint, applied uniformly to the home page, single posts, Projects, and Thoughts/Notes. Mobile keeps the previous `1rem` via an override in the existing `max-width: 925px` header block
+- Header-to-body spacing is now identical on every template: 50px from the header rule to the first body block on desktop (>925px), 30px on tablet (601–925px), 20px on mobile (≤600px). `.navigation-cover` `margin-bottom` goes from `1rem` to `3rem` above 925px (back to `1rem` below), and every template now follows the sections' `padding-top: 2rem` / mobile `1rem` convention: `.hero-section` (home) gains `padding-top`, `.single-post-back` goes from `1.5rem` to `2rem`, the first `.header-detail` on a single Note drops from `3rem` to `2rem`, `.single-project` and `.timeline-section` get the missing `1rem` mobile override, and static pages are wrapped in `<article class="static-page">` (`page-single.php`) with the same padding
 
 ### Fixed
 - Mobile header now shows the same horizontal rule as desktop (1px gradient border under the site title / menu button). A leftover `.row { border: solid 0px; }` in the `max-width: 925px` block was zeroing the header's `border-bottom` because the header is `.row.navigation-cover`; the no-op rule is removed

@@ -57,6 +57,7 @@ section {
 
 .hero-section {
   margin-top: 1rem;
+  padding-top: 2rem;
   margin-bottom: 4rem;
 }
 
@@ -111,6 +112,26 @@ section {
 
   .hero-featured-image {
     max-width: 100%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .hero-section {
+    padding-top: 1rem;
+  }
+}
+
+/* ------------------------------------------------------------ */
+/*                       Static pages                           */
+/* ------------------------------------------------------------ */
+
+.static-page {
+  padding-top: 2rem;
+}
+
+@media screen and (max-width: 600px) {
+  .static-page {
+    padding-top: 1rem;
   }
 }
 
@@ -222,6 +243,17 @@ img.aligncenter { display: block; margin-left: auto; margin-right: auto; width: 
 .header-detail {
 	text-align: center;
 	padding: 3rem 1rem;
+}
+
+/* First block on a single Note sits directly under the header */
+main > .header-detail:first-child {
+	padding-top: 2rem;
+}
+
+@media screen and (max-width: 600px) {
+	main > .header-detail:first-child {
+		padding-top: 1rem;
+	}
 }
 
 .mobile-menu .icon {
@@ -936,6 +968,10 @@ font-weight: 100 !important;
   .single-project-excerpt {
     font-size: 1.5rem;
   }
+
+  .single-project {
+    padding-top: 1rem;
+  }
   
   .single-project-header {
     margin-bottom: 2rem;
@@ -1202,6 +1238,10 @@ font-weight: 100 !important;
 /* ------------------------------------------------------------ */
 
 @media (max-width: 600px) {
+  .timeline-section {
+    padding-top: 1rem;
+  }
+
   .timeline-container {
     padding: 0 0 1.5rem 0;
   }
@@ -1250,7 +1290,7 @@ font-weight: 100 !important;
 
 /* Back link above the post */
 .single-post-back {
-  padding: 1.5rem 0 0;
+  padding: 2rem 0 0;
 }
 
 .single-post-back a {
