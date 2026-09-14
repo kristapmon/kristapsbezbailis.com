@@ -33,6 +33,8 @@ add_action( 'wp_enqueue_scripts', 'startwordpress_scripts' );
 require_once get_template_directory() . '/inc/class-theme-html-to-markdown.php';
 require_once get_template_directory() . '/inc/markdown-negotiation.php';
 require_once get_template_directory() . '/inc/youtube-embeds.php';
+require_once get_template_directory() . '/inc/social-meta.php';
+require_once get_template_directory() . '/inc/social-meta-editor.php';
 
 // SRI integrity attributes for CDN stylesheets
 function theme_add_sri_attributes( $html, $handle ) {
@@ -1331,8 +1333,11 @@ function theme_seo_get_options() {
         'job_title' => '',
         'short_bio' => '',
         
-        // Images
+        // Social Sharing (Open Graph)
+        'og_site_name' => '',
+        'default_og_description' => '',
         'default_og_image' => '',
+        'default_og_image_id' => 0,
     );
     
     $options = get_option('theme_seo_options', array());
@@ -1373,8 +1378,22 @@ function theme_seo_sanitize_options($input) {
     $sanitized['job_title'] = sanitize_text_field($input['job_title'] ?? '');
     $sanitized['short_bio'] = sanitize_textarea_field($input['short_bio'] ?? '');
     
-    // Images
+    // Social Sharing (Open Graph)
+    $sanitized['og_site_name'] = sanitize_text_field($input['og_site_name'] ?? '');
+    $sanitized['default_og_description'] = sanitize_textarea_field($input['default_og_description'] ?? '');
     $sanitized['default_og_image'] = esc_url_raw($input['default_og_image'] ?? '');
+    $sanitized['default_og_image_id'] = absint($input['default_og_image_id'] ?? 0);
+
+    if ($sanitized['default_og_image_id'] === 0 && $sanitized['default_og_image'] !== '') {
+        $sanitized['default_og_image_id'] = absint(attachment_url_to_postid($sanitized['default_og_image']));
+    }
+
+    if ($sanitized['default_og_image_id'] > 0) {
+        $resolved_url = wp_get_attachment_url($sanitized['default_og_image_id']);
+        if ($resolved_url) {
+            $sanitized['default_og_image'] = $resolved_url;
+        }
+    }
     
     return $sanitized;
 }
@@ -1406,7 +1425,7 @@ function theme_seo_admin_scripts($hook) {
         'theme-seo-admin',
         get_template_directory_uri() . '/assets/js/theme-seo-admin.js',
         array('jquery'),
-        '1.0',
+        '1.1',
         true
     );
     
@@ -1425,6 +1444,10 @@ function theme_seo_admin_scripts($hook) {
         .theme-seo-wrap .image-preview img { max-width: 300px; height: auto; border: 1px solid #ddd; border-radius: 4px; }
         .theme-seo-wrap .button-remove-image { color: #a00; margin-left: 10px; }
         .theme-seo-wrap .button-remove-image:hover { color: #dc3232; }
+        .theme-seo-wrap .theme-og-counter { color: #646970; margin: 4px 0 0; }
+        .theme-seo-wrap .theme-og-counter.is-over { color: #d63638; font-weight: 600; }
+        .theme-seo-wrap .theme-og-dimensions { color: #646970; margin: 6px 0 0; }
+        .theme-seo-wrap .theme-og-warning { color: #d63638; margin: 6px 0 0; }
     ');
 }
 add_action('admin_enqueue_scripts', 'theme_seo_admin_scripts');
@@ -1597,14 +1620,63 @@ function theme_seo_settings_page() {
                 </tr>
             </table>
             
-            <!-- Default Images Section -->
-            <h2>Default Images</h2>
+            <!-- Social Sharing (Open Graph) -->
+            <h2>Social Sharing (Open Graph)</h2>
+            <p class="description" style="margin-bottom: 15px;">Site-wide defaults for share cards. Per-post overrides live in the Social Sharing box on posts, pages, Notes, and Projects.</p>
             <table class="form-table" role="presentation">
+                <tr>
+                    <th scope="row">
+                        <label for="og_site_name">Site name</label>
+                    </th>
+                    <td>
+                        <input type="text"
+                               id="og_site_name"
+                               name="theme_seo_options[og_site_name]"
+                               value="<?php echo esc_attr($options['og_site_name']); ?>"
+                               placeholder="<?php echo esc_attr(get_bloginfo('name')); ?>"
+                               class="regular-text">
+                        <p class="description">Shown as <code>og:site_name</code>. Defaults to the WordPress site title if empty.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="default_og_description">Default description</label>
+                    </th>
+                    <td>
+                        <textarea id="default_og_description"
+                                  name="theme_seo_options[default_og_description]"
+                                  class="theme-og-count"
+                                  data-limit="200"
+                                  rows="3"
+                                  placeholder="<?php echo esc_attr(get_bloginfo('description')); ?>"><?php echo esc_textarea($options['default_og_description']); ?></textarea>
+                        <p class="theme-og-counter" id="default_og_description_counter">0 / 200</p>
+                        <p class="description">Used when a page has no override, excerpt, or trimmed content. Defaults to the site tagline if empty.</p>
+                    </td>
+                </tr>
                 <tr>
                     <th scope="row">
                         <label for="default_og_image">Default OG Image</label>
                     </th>
                     <td>
+                        <?php
+                        $default_og_id = absint($options['default_og_image_id']);
+                        $default_og_w = 0;
+                        $default_og_h = 0;
+                        if ($default_og_id > 0) {
+                            $default_og_src = wp_get_attachment_image_src($default_og_id, 'full');
+                            if ($default_og_src) {
+                                $default_og_w = (int) $default_og_src[1];
+                                $default_og_h = (int) $default_og_src[2];
+                            }
+                        }
+                        $default_og_warning = function_exists('theme_social_meta_image_size_warning')
+                            ? theme_social_meta_image_size_warning($default_og_w, $default_og_h)
+                            : '';
+                        ?>
+                        <input type="hidden"
+                               id="default_og_image_id"
+                               name="theme_seo_options[default_og_image_id]"
+                               value="<?php echo esc_attr($default_og_id ? (string) $default_og_id : ''); ?>">
                         <input type="url" 
                                id="default_og_image" 
                                name="theme_seo_options[default_og_image]" 
@@ -1612,12 +1684,20 @@ function theme_seo_settings_page() {
                                class="regular-text">
                         <button type="button" class="button" id="upload_og_image_button">Select Image</button>
                         <button type="button" class="button button-remove-image" id="remove_og_image_button" style="<?php echo empty($options['default_og_image']) ? 'display:none;' : ''; ?>">Remove</button>
-                        <p class="description">Fallback image for social sharing when posts don't have a featured image. Recommended size: 1200x630px</p>
+                        <p class="description">Fallback when a post has no override, featured image, or inline image. Recommended 1200×630 px (1.91:1), JPG or PNG, under 5 MB. Minimum 600×315.</p>
                         <div class="image-preview" id="og_image_preview">
                             <?php if (!empty($options['default_og_image'])) : ?>
                                 <img src="<?php echo esc_url($options['default_og_image']); ?>" alt="OG Image Preview">
                             <?php endif; ?>
                         </div>
+                        <p class="theme-og-dimensions" id="og_image_dimensions" data-width="<?php echo esc_attr((string) $default_og_w); ?>" data-height="<?php echo esc_attr((string) $default_og_h); ?>">
+                            <?php
+                            if ($default_og_w && $default_og_h) {
+                                echo esc_html($default_og_w . ' × ' . $default_og_h . ' px');
+                            }
+                            ?>
+                        </p>
+                        <p class="theme-og-warning" id="og_image_warning" style="<?php echo $default_og_warning === '' ? 'display:none;' : ''; ?>"><?php echo esc_html($default_og_warning); ?></p>
                     </td>
                 </tr>
             </table>
@@ -1636,46 +1716,6 @@ function theme_seo_settings_page() {
 /* ========================================
    SEO Functions
    ======================================== */
-
-/**
- * Add meta description tag
- */
-function theme_meta_description() {
-    $options = theme_seo_get_options();
-    $author_name = !empty($options['full_name']) ? $options['full_name'] : get_bloginfo('name');
-    
-    if (is_singular()) {
-        global $post;
-        $description = '';
-        
-        // Try to get excerpt first
-        if (has_excerpt($post->ID)) {
-            $description = get_the_excerpt();
-        } else {
-            // Fall back to trimmed content
-            $content = get_the_content();
-            $description = wp_trim_words(wp_strip_all_tags($content), 30, '...');
-        }
-        
-        if (!empty($description)) {
-            echo '<meta name="description" content="' . esc_attr($description) . '">' . "\n";
-        }
-    } elseif (is_home() || is_front_page()) {
-        $description = get_bloginfo('description');
-        if (!empty($description)) {
-            echo '<meta name="description" content="' . esc_attr($description) . '">' . "\n";
-        }
-    } elseif (is_archive()) {
-        if (is_post_type_archive()) {
-            $post_type = get_query_var('post_type');
-            $post_type_obj = get_post_type_object($post_type);
-            if ($post_type_obj) {
-                echo '<meta name="description" content="Browse all ' . esc_attr($post_type_obj->labels->name) . ' by ' . esc_attr($author_name) . '">' . "\n";
-            }
-        }
-    }
-}
-add_action('wp_head', 'theme_meta_description', 1);
 
 /**
  * Add canonical URL
@@ -1706,118 +1746,6 @@ function theme_robots_meta() {
     }
 }
 add_action('wp_head', 'theme_robots_meta', 1);
-
-/**
- * Add Open Graph meta tags
- */
-function theme_open_graph_tags() {
-    $options = theme_seo_get_options();
-    $author_name = !empty($options['full_name']) ? $options['full_name'] : get_bloginfo('name');
-    $default_og_image = $options['default_og_image'];
-    
-    // Site name for all pages
-    echo '<meta property="og:site_name" content="' . esc_attr(get_bloginfo('name')) . '">' . "\n";
-    echo '<meta property="og:locale" content="en_US">' . "\n";
-    
-    if (is_singular()) {
-        global $post;
-        
-        // Get featured image or fallback to default OG image
-        $image = '';
-        if (has_post_thumbnail($post->ID)) {
-            $image = get_the_post_thumbnail_url($post->ID, 'large');
-        } elseif (!empty($default_og_image)) {
-            $image = $default_og_image;
-        }
-        
-        // Get description
-        $description = has_excerpt($post->ID) ? get_the_excerpt() : wp_trim_words(wp_strip_all_tags(get_the_content()), 30, '...');
-        
-        // Determine type based on post type
-        $og_type = 'article';
-        if (is_page()) {
-            $og_type = 'website';
-        }
-        
-        echo '<meta property="og:type" content="' . esc_attr($og_type) . '">' . "\n";
-        echo '<meta property="og:title" content="' . esc_attr(get_the_title()) . '">' . "\n";
-        echo '<meta property="og:description" content="' . esc_attr($description) . '">' . "\n";
-        echo '<meta property="og:url" content="' . esc_url(get_permalink()) . '">' . "\n";
-        
-        if (!empty($image)) {
-            echo '<meta property="og:image" content="' . esc_url($image) . '">' . "\n";
-        }
-        
-        // Article specific tags
-        if ($og_type === 'article') {
-            echo '<meta property="article:published_time" content="' . esc_attr(get_the_date('c')) . '">' . "\n";
-            echo '<meta property="article:modified_time" content="' . esc_attr(get_the_modified_date('c')) . '">' . "\n";
-            echo '<meta property="article:author" content="' . esc_attr($author_name) . '">' . "\n";
-        }
-    } elseif (is_home() || is_front_page()) {
-        echo '<meta property="og:type" content="website">' . "\n";
-        echo '<meta property="og:title" content="' . esc_attr(get_bloginfo('name')) . '">' . "\n";
-        echo '<meta property="og:description" content="' . esc_attr(get_bloginfo('description')) . '">' . "\n";
-        echo '<meta property="og:url" content="' . esc_url(home_url('/')) . '">' . "\n";
-        
-        // Add default OG image for home page
-        if (!empty($default_og_image)) {
-            echo '<meta property="og:image" content="' . esc_url($default_og_image) . '">' . "\n";
-        }
-    }
-}
-add_action('wp_head', 'theme_open_graph_tags', 5);
-
-/**
- * Add Twitter Card meta tags
- */
-function theme_twitter_card_tags() {
-    $options = theme_seo_get_options();
-    $twitter_handle = $options['twitter_handle'];
-    $default_og_image = $options['default_og_image'];
-    
-    // Use summary_large_image for better visibility
-    echo '<meta name="twitter:card" content="summary_large_image">' . "\n";
-    
-    // Add Twitter handle if configured
-    if (!empty($twitter_handle)) {
-        // Ensure handle starts with @
-        $handle = ltrim($twitter_handle, '@');
-        echo '<meta name="twitter:site" content="@' . esc_attr($handle) . '">' . "\n";
-        echo '<meta name="twitter:creator" content="@' . esc_attr($handle) . '">' . "\n";
-    }
-    
-    if (is_singular()) {
-        global $post;
-        
-        // Get featured image or fallback to default OG image
-        $image = '';
-        if (has_post_thumbnail($post->ID)) {
-            $image = get_the_post_thumbnail_url($post->ID, 'large');
-        } elseif (!empty($default_og_image)) {
-            $image = $default_og_image;
-        }
-        
-        // Get description
-        $description = has_excerpt($post->ID) ? get_the_excerpt() : wp_trim_words(wp_strip_all_tags(get_the_content()), 30, '...');
-        
-        echo '<meta name="twitter:title" content="' . esc_attr(get_the_title()) . '">' . "\n";
-        echo '<meta name="twitter:description" content="' . esc_attr($description) . '">' . "\n";
-        
-        if (!empty($image)) {
-            echo '<meta name="twitter:image" content="' . esc_url($image) . '">' . "\n";
-        }
-    } elseif (is_home() || is_front_page()) {
-        echo '<meta name="twitter:title" content="' . esc_attr(get_bloginfo('name')) . '">' . "\n";
-        echo '<meta name="twitter:description" content="' . esc_attr(get_bloginfo('description')) . '">' . "\n";
-        
-        // Add default OG image for home page
-        if (!empty($default_og_image)) {
-            echo '<meta name="twitter:image" content="' . esc_url($default_og_image) . '">' . "\n";
-        }
-    }
-}
-add_action('wp_head', 'theme_twitter_card_tags', 5);
 
 /**
  * Add Person and WebSite schema (JSON-LD)
@@ -1926,7 +1854,7 @@ function theme_schema_article() {
     
     $options = theme_seo_get_options();
     $author_name = !empty($options['full_name']) ? $options['full_name'] : get_bloginfo('name');
-    $default_og_image = $options['default_og_image'];
+    $social = theme_social_meta_get_data();
     
     // Determine schema type
     $schema_type = 'Article';
@@ -1960,27 +1888,23 @@ function theme_schema_article() {
         'inLanguage' => 'en-US'
     );
     
-    // Add description
-    if (has_excerpt($post->ID)) {
-        $schema['description'] = get_the_excerpt();
-    } else {
-        $schema['description'] = wp_trim_words(wp_strip_all_tags(get_the_content()), 30, '...');
+    // Description and image come from the shared social-meta resolver
+    if (!empty($social['description'])) {
+        $schema['description'] = $social['description'];
     }
-    
-    // Add featured image or fallback to default OG image
-    if (has_post_thumbnail($post->ID)) {
-        $image_id = get_post_thumbnail_id($post->ID);
-        $image_data = wp_get_attachment_image_src($image_id, 'full');
-        if ($image_data) {
-            $schema['image'] = array(
-                '@type' => 'ImageObject',
-                'url' => $image_data[0],
-                'width' => $image_data[1],
-                'height' => $image_data[2]
-            );
+
+    if (!empty($social['image']) && !empty($social['image']['url'])) {
+        $schema_image = array(
+            '@type' => 'ImageObject',
+            'url' => $social['image']['url'],
+        );
+        if (!empty($social['image']['width'])) {
+            $schema_image['width'] = $social['image']['width'];
         }
-    } elseif (!empty($default_og_image)) {
-        $schema['image'] = $default_og_image;
+        if (!empty($social['image']['height'])) {
+            $schema_image['height'] = $social['image']['height'];
+        }
+        $schema['image'] = $schema_image;
     }
     
     // Add word count for articles
