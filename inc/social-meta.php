@@ -247,7 +247,7 @@ function theme_social_meta_resolve_post( $post, $ignore_overrides = false ) {
 
 	$description = $override_desc;
 	if ( $description === '' && has_excerpt( $post_id ) ) {
-		$description = wp_strip_all_tags( (string) $post->post_excerpt );
+		$description = wp_strip_all_tags( strip_shortcodes( (string) $post->post_excerpt ) );
 	}
 	if ( $description === '' && ! post_password_required( $post ) ) {
 		$description = theme_social_meta_trim( $post->post_content );
